@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Explore Emissions by Country | The Climate Bill</title>
+<meta name="description" content="An interactive world map of CO2 emissions by country, from The Climate Bill.">
+<meta property="og:title" content="Explore Emissions by Country | The Climate Bill">
+<meta property="og:description" content="An interactive world map of CO2 emissions by country.">
+<meta property="og:image" content="https://theclimatebill.github.io/social-explore.png">
+<meta property="og:url" content="https://theclimatebill.github.io/explore.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://theclimatebill.github.io/social-explore.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:system-ui,-apple-system,sans-serif;background:#f5f4f0;color:#1a1a18}
@@ -30,15 +41,16 @@ nav a.active{color:#1a1a18;font-weight:500}
 .search-wrap input:focus{border-color:#999}
 .example{font-size:12px;color:#bbb}
 
-.tooltip{position:absolute;background:#fff;border:0.5px solid #ccc;border-radius:8px;padding:8px 12px;font-size:12px;pointer-events:none;display:none;z-index:10;min-width:140px;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
+.tooltip{position:absolute;left:0;top:0;background:#fff;border:0.5px solid #ccc;border-radius:8px;padding:8px 12px;font-size:12px;pointer-events:none;display:none;z-index:10;min-width:140px;box-shadow:0 2px 12px rgba(0,0,0,0.08);will-change:transform}
 .tooltip .t-name{font-weight:500;font-size:13px;margin-bottom:2px;color:#1a1a18}
 .tooltip .t-val{color:#777}
 
 .no-data{fill:#e4e2dc}
 .ocean{fill:#d4e4ef}
 .graticule{fill:none;stroke:#c0d4e0;stroke-width:0.3}
-.country-path{stroke:#fff;stroke-width:0.4;cursor:pointer;transition:opacity 0.12s}
+.country-path{stroke:#fff;stroke-width:0.4;cursor:pointer;transition:opacity 0.12s ease,stroke-width 0.12s ease}
 .country-path:hover{stroke:#555;stroke-width:0.8;opacity:0.85}
+#map-svg-wrap svg{will-change:auto}
 </style>
 </head>
 <body>
@@ -107,6 +119,26 @@ svg.append("path").datum(d3.geoGraticule()()).attr("class","graticule").attr("d"
 const countriesG = svg.append("g");
 
 const tooltip = document.getElementById("tooltip");
+const mapWrap = document.getElementById("map-svg-wrap");
+
+// Cache the wrapper's bounding rect instead of reading layout on every
+// mousemove (that forces a synchronous reflow each time and is the main
+// source of the map feeling laggy). Re-measure only on resize.
+let wrapRect = mapWrap.getBoundingClientRect();
+window.addEventListener("resize", () => { wrapRect = mapWrap.getBoundingClientRect(); }, { passive: true });
+
+// Throttle tooltip repositioning to one update per animation frame, and
+// move it with a GPU-friendly transform instead of left/top so the
+// browser doesn't have to re-layout on every pointer move.
+let pendingEvent = null;
+let rafScheduled = false;
+function flushTooltipPosition() {
+  rafScheduled = false;
+  if (!pendingEvent) return;
+  const tx = Math.min(pendingEvent.clientX - wrapRect.left + 14, wrapRect.width - 170);
+  const ty = Math.min(pendingEvent.clientY - wrapRect.top + 14, wrapRect.height - 70);
+  tooltip.style.transform = `translate(${tx}px, ${ty}px)`;
+}
 
 fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
   .then(r=>r.json())
@@ -122,19 +154,20 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
         const iso = ISO_N2A[String(d.id).padStart(3,"0")];
         return EMISSIONS[iso] ? colorScale(EMISSIONS[iso]) : "#e4e2dc";
       })
-      .on("mousemove", function(event, d) {
+      .on("mouseenter", function(event, d) {
         const iso = ISO_N2A[String(d.id).padStart(3,"0")];
         if (!iso || !EMISSIONS[iso]) return;
         document.getElementById("t-name").textContent = ISO_NAMES[iso]||iso;
         document.getElementById("t-val").textContent = Math.round(EMISSIONS[iso]).toLocaleString()+" Mt CO₂ (2023)";
-        const bbox = document.getElementById("map-svg-wrap").getBoundingClientRect();
-        const tx = Math.min(event.clientX - bbox.left + 14, bbox.width - 170);
-        const ty = Math.min(event.clientY - bbox.top + 14, bbox.height - 70);
-        tooltip.style.left = tx+"px";
-        tooltip.style.top = ty+"px";
         tooltip.style.display = "block";
       })
-      .on("mouseleave", () => tooltip.style.display = "none");
+      .on("mousemove", function(event, d) {
+        const iso = ISO_N2A[String(d.id).padStart(3,"0")];
+        if (!iso || !EMISSIONS[iso]) return;
+        pendingEvent = event;
+        if (!rafScheduled) { rafScheduled = true; requestAnimationFrame(flushTooltipPosition); }
+      })
+      .on("mouseleave", () => { tooltip.style.display = "none"; pendingEvent = null; });
   });
 
 document.getElementById("search").oninput = e => {
