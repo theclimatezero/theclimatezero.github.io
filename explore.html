@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Explore Emissions by Country | The Climate Bill</title>
-<meta name="description" content="An interactive world map of CO2 emissions by country, from The Climate Bill.">
-<meta property="og:title" content="Explore Emissions by Country | The Climate Bill">
+<title>Explore Emissions by Country | ClimateZero</title>
+<meta name="description" content="An interactive world map of CO2 emissions by country, from ClimateZero.">
+<meta property="og:title" content="Explore Emissions by Country | ClimateZero">
 <meta property="og:description" content="An interactive world map of CO2 emissions by country.">
 <meta property="og:image" content="https://theclimatebill.github.io/social-explore.png">
 <meta property="og:url" content="https://theclimatebill.github.io/explore.html">
@@ -42,6 +42,19 @@ nav a.active{color:#1a1a18;font-weight:500}
 .example{font-size:12px;color:#bbb}
 
 .tooltip{position:absolute;left:0;top:0;background:#fff;border:0.5px solid #ccc;border-radius:8px;padding:8px 12px;font-size:12px;pointer-events:none;display:none;z-index:10;min-width:140px;box-shadow:0 2px 12px rgba(0,0,0,0.08);will-change:transform}
+.detail-panel{position:absolute;top:16px;right:16px;bottom:16px;width:280px;max-width:calc(100% - 32px);background:#fff;border:0.5px solid #ccc;border-radius:12px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,0.12);display:none;z-index:20;overflow-y:auto}
+.detail-panel.open{display:block}
+.detail-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:20px;line-height:1;color:#888;cursor:pointer;padding:4px}
+.detail-close:hover{color:#1a1a18}
+.detail-name{font-size:18px;font-weight:600;margin-bottom:2px;padding-right:20px}
+.detail-empty{font-size:13px;color:#888;margin-top:8px;line-height:1.5}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.detail-cell{background:#f5f4f0;border-radius:8px;padding:10px}
+.detail-cell .dv{font-size:15px;font-weight:600;color:#1a1a18}
+.detail-cell .dl{font-size:10.5px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.detail-link{display:inline-block;margin-top:16px;font-size:13px;color:#3f8dc4;text-decoration:none;font-weight:500}
+.detail-link:hover{text-decoration:underline}
+@media(max-width:640px){.detail-panel{left:16px;width:auto}}
 .tooltip .t-name{font-weight:500;font-size:13px;margin-bottom:2px;color:#1a1a18}
 .tooltip .t-val{color:#777}
 
@@ -57,7 +70,7 @@ nav a.active{color:#1a1a18;font-weight:500}
 <div class="page">
 
   <header>
-    <a class="logo" href="https://theclimatebill.github.io/index.html">The Climate<span>Bill</span></a>
+    <a class="logo" href="https://theclimatebill.github.io/index.html">Climate<span>Zero</span></a>
     <nav>
       <a href="https://theclimatebill.github.io/explore.html" class="active">Explore</a>
       <a href="https://theclimatebill.github.io/countries.html">Countries</a>
@@ -77,6 +90,10 @@ nav a.active{color:#1a1a18;font-weight:500}
     <div class="tooltip" id="tooltip">
       <div class="t-name" id="t-name"></div>
       <div class="t-val" id="t-val"></div>
+    </div>
+    <div class="detail-panel" id="detail-panel" role="dialog" aria-label="Country data">
+      <button class="detail-close" id="detail-close" aria-label="Close">×</button>
+      <div id="detail-body"></div>
     </div>
   </div>
 
@@ -102,9 +119,14 @@ const EMISSIONS = {
   "NOR":37,"SWE":40,"IRL":37,"KEN":18,"BGD":100,"ETH":16,
 };
 
-const ISO_N2A = {"004":"AFG","008":"ALB","012":"DZA","024":"AGO","032":"ARG","036":"AUS","040":"AUT","050":"BGD","056":"BEL","068":"BOL","076":"BRA","100":"BGR","116":"KHM","120":"CMR","124":"CAN","152":"CHL","156":"CHN","170":"COL","191":"HRV","203":"CZE","208":"DNK","218":"ECU","818":"EGY","231":"ETH","246":"FIN","250":"FRA","276":"DEU","288":"GHA","300":"GRC","348":"HUN","356":"IND","360":"IDN","364":"IRN","372":"IRL","380":"ITA","392":"JPN","404":"KEN","410":"KOR","398":"KAZ","484":"MEX","528":"NLD","566":"NGA","578":"NOR","586":"PAK","608":"PHL","616":"POL","620":"PRT","643":"RUS","682":"SAU","710":"ZAF","724":"ESP","752":"SWE","756":"CHE","764":"THA","792":"TUR","804":"UKR","826":"GBR","840":"USA","704":"VNM","056":"BEL","152":"CHL","170":"COL","032":"ARG","076":"BRA"};
+const ISO_N2A = {"004":"AFG","008":"ALB","012":"DZA","024":"AGO","032":"ARG","036":"AUS","040":"AUT","050":"BGD","056":"BEL","068":"BOL","076":"BRA","100":"BGR","116":"KHM","120":"CMR","124":"CAN","152":"CHL","156":"CHN","170":"COL","191":"HRV","203":"CZE","208":"DNK","218":"ECU","818":"EGY","231":"ETH","246":"FIN","250":"FRA","276":"DEU","288":"GHA","300":"GRC","348":"HUN","356":"IND","360":"IDN","364":"IRN","372":"IRL","380":"ITA","392":"JPN","404":"KEN","410":"KOR","398":"KAZ","484":"MEX","528":"NLD","566":"NGA","578":"NOR","586":"PAK","608":"PHL","616":"POL","620":"PRT","643":"RUS","682":"SAU","710":"ZAF","724":"ESP","752":"SWE","756":"CHE","764":"THA","792":"TUR","804":"UKR","826":"GBR","840":"USA","704":"VNM","056":"BEL","152":"CHL","170":"COL","032":"ARG","076":"BRA","504":"MAR","784":"ARE","144":"LKA","798":"TUV"};
 
-const ISO_NAMES = {"CHN":"China","USA":"United States","IND":"India","RUS":"Russia","JPN":"Japan","DEU":"Germany","KOR":"South Korea","CAN":"Canada","SAU":"Saudi Arabia","IRN":"Iran","GBR":"United Kingdom","BRA":"Brazil","ZAF":"South Africa","MEX":"Mexico","IDN":"Indonesia","AUS":"Australia","TUR":"Turkey","POL":"Poland","FRA":"France","THA":"Thailand","ITA":"Italy","MYS":"Malaysia","ESP":"Spain","VNM":"Vietnam","EGY":"Egypt","PAK":"Pakistan","NGA":"Nigeria","ARG":"Argentina","NLD":"Netherlands","BEL":"Belgium","CHL":"Chile","PHL":"Philippines","COL":"Colombia","UKR":"Ukraine","KAZ":"Kazakhstan","NOR":"Norway","SWE":"Sweden","IRL":"Ireland","KEN":"Kenya","BGD":"Bangladesh","ETH":"Ethiopia"};
+const ISO_NAMES = {"CHN":"China","USA":"United States","IND":"India","RUS":"Russia","JPN":"Japan","DEU":"Germany","KOR":"South Korea","CAN":"Canada","SAU":"Saudi Arabia","IRN":"Iran","GBR":"United Kingdom","BRA":"Brazil","ZAF":"South Africa","MEX":"Mexico","IDN":"Indonesia","AUS":"Australia","TUR":"Turkey","POL":"Poland","FRA":"France","THA":"Thailand","ITA":"Italy","MYS":"Malaysia","ESP":"Spain","VNM":"Vietnam","EGY":"Egypt","PAK":"Pakistan","NGA":"Nigeria","ARG":"Argentina","NLD":"Netherlands","BEL":"Belgium","CHL":"Chile","PHL":"Philippines","COL":"Colombia","UKR":"Ukraine","KAZ":"Kazakhstan","NOR":"Norway","SWE":"Sweden","IRL":"Ireland","KEN":"Kenya","BGD":"Bangladesh","ETH":"Ethiopia","DNK":"Denmark","MAR":"Morocco","ARE":"United Arab Emirates","LKA":"Sri Lanka","TUV":"Tuvalu"};
+
+// Fuller per-country data (CO2, emissions share, historical share,
+// renewable electricity, estimated GDP loss), for the countries with a
+// full profile page. Countries not in here still show CO2 alone.
+const COUNTRY_STATS = {"AUS":{"name":"Australia","page":"country-australia.html","co2":"0.39 Gt","share":"1.1%","historical":"1.1%","renewable":"35%","gdpLoss":"0.3% GDP"},"BGD":{"name":"Bangladesh","page":"country-bangladesh.html","co2":"0.12 Gt","share":"0.3%","historical":"0.1%","renewable":"5%","gdpLoss":"1.5 to 2% GDP"},"BRA":{"name":"Brazil","page":"country-brazil.html","co2":"0.47 Gt","share":"1.3%","historical":"1.3%","renewable":"89%","gdpLoss":"0.5% GDP"},"CAN":{"name":"Canada","page":"country-canada.html","co2":"0.54 Gt","share":"1.5%","historical":"2%","renewable":"67%","gdpLoss":"0.3% GDP"},"CHN":{"name":"China","page":"country-china.html","co2":"11.4 Gt","share":"31%","historical":"14%","renewable":"31%","gdpLoss":"0.5 to 1% GDP"},"DNK":{"name":"Denmark","page":"country-denmark.html","co2":"0.028 Gt","share":"0.08%","historical":"0.3%","renewable":"87%","gdpLoss":"0.1% GDP"},"EGY":{"name":"Egypt","page":"country-egypt.html","co2":"0.25 Gt","share":"0.7%","historical":"0.5%","renewable":"12%","gdpLoss":"0.5% GDP"},"ETH":{"name":"Ethiopia","page":"country-ethiopia.html","co2":"0.02 Gt","share":"0.06%","historical":"0.1%","renewable":"99%","gdpLoss":"3 to 5% GDP"},"FRA":{"name":"France","page":"country-france.html","co2":"0.28 Gt","share":"0.8%","historical":"2.3%","renewable":"27%","gdpLoss":"0.15% GDP"},"DEU":{"name":"Germany","page":"country-germany.html","co2":"0.6 Gt","share":"1.7%","historical":"5.5%","renewable":"52%","gdpLoss":"0.2% GDP"},"IND":{"name":"India","page":"country-india.html","share":"8%","historical":"3.5%","gdpLoss":"1.5 to 2%"},"IDN":{"name":"Indonesia","page":"country-indonesia.html","co2":"0.47 Gt","share":"1.3%","historical":"1.2%","renewable":"19%","gdpLoss":"1 to 2% GDP"},"ITA":{"name":"Italy","page":"country-italy.html","co2":"0.31 Gt","share":"0.85%","historical":"2%","renewable":"39%","gdpLoss":"0.3% GDP"},"JPN":{"name":"Japan","page":"country-japan.html","co2":"1.0 Gt","share":"3%","historical":"4%","renewable":"24%","gdpLoss":"0.4% GDP"},"KEN":{"name":"Kenya","page":"country-kenya.html","co2":"0.02 Gt","share":"0.06%","historical":"0.1%","renewable":"90%","gdpLoss":"2 to 4% GDP"},"MEX":{"name":"Mexico","page":"country-mexico.html","co2":"0.43 Gt","share":"1.2%","historical":"1.3%","renewable":"25%","gdpLoss":"0.5% GDP"},"MAR":{"name":"Morocco","page":"country-morocco.html","co2":"0.075 Gt","share":"0.2%","historical":"0.1%","renewable":"38%","gdpLoss":"0.5 to 1% GDP"},"NLD":{"name":"Netherlands","page":"country-netherlands.html","co2":"0.13 Gt","share":"0.4%","historical":"1%","renewable":"48%","gdpLoss":"0.5% GDP"},"NGA":{"name":"Nigeria","page":"country-nigeria.html","co2":"0.13 Gt","share":"0.35%","historical":"0.5%","renewable":"19%","gdpLoss":"1 to 2% GDP"},"NOR":{"name":"Norway","page":"country-norway.html","co2":"0.037 Gt","share":"0.1%","historical":"0.3%","renewable":"98%","gdpLoss":"0.1% GDP"},"PAK":{"name":"Pakistan","page":"country-pakistan.html","co2":"0.24 Gt","share":"0.65%","historical":"0.4%","renewable":"33%","gdpLoss":"3 to 5% GDP in flood years"},"PHL":{"name":"Philippines","page":"country-philippines.html","co2":"0.15 Gt","share":"0.4%","historical":"0.3%","renewable":"31%","gdpLoss":"1 to 3% GDP"},"POL":{"name":"Poland","page":"country-poland.html","co2":"0.29 Gt","share":"0.8%","historical":"2%","renewable":"27%","gdpLoss":"0.2% GDP"},"RUS":{"name":"Russia","page":"country-russia.html","co2":"1.9 Gt","share":"5%","historical":"7%","renewable":"20%","gdpLoss":"0.3% GDP"},"SAU":{"name":"Saudi Arabia","page":"country-saudiarabia.html","co2":"0.51 Gt","share":"1.4%","historical":"1.1%","renewable":"1%","gdpLoss":"0.2% GDP"},"ZAF":{"name":"South Africa","page":"country-southafrica.html","co2":"0.4 Gt","share":"1.1%","historical":"1.3%","renewable":"12%","gdpLoss":"1% GDP"},"KOR":{"name":"South Korea","page":"country-southkorea.html","co2":"0.6 Gt","share":"1.7%","historical":"1.4%","renewable":"9%","gdpLoss":"0.3% GDP"},"ESP":{"name":"Spain","page":"country-spain.html","co2":"0.22 Gt","share":"0.6%","historical":"1.4%","renewable":"50%","gdpLoss":"0.3% GDP"},"LKA":{"name":"Sri Lanka","page":"country-srilanka.html","co2":"0.02 Gt","share":"0.06%","historical":"0.05%","renewable":"52%","gdpLoss":"1 to 2% GDP"},"SWE":{"name":"Sweden","page":"country-sweden.html","co2":"0.037 Gt","share":"0.1%","historical":"0.4%","renewable":"69%","gdpLoss":"0.1% GDP"},"THA":{"name":"Thailand","page":"country-thailand.html","co2":"0.28 Gt","share":"0.75%","historical":"0.6%","renewable":"16%","gdpLoss":"1% GDP"},"TUR":{"name":"Turkey","page":"country-turkey.html","co2":"0.44 Gt","share":"1.2%","historical":"1.2%","renewable":"42%","gdpLoss":"0.4% GDP"},"TUV":{"name":"Tuvalu","page":"country-tuvalu.html","co2":"1e-05 Gt","share":"0%","historical":"0%","renewable":"45%","gdpLoss":"Existential"},"ARE":{"name":"United Arab Emirates","page":"country-uae.html","co2":"0.24 Gt","share":"0.65%","historical":"0.4%","renewable":"7%","gdpLoss":"0.2% GDP"},"GBR":{"name":"United Kingdom","page":"country-uk.html","co2":"0.3 Gt","share":"0.9%","historical":"4.6%","renewable":"47%","gdpLoss":"0.1% GDP"},"UKR":{"name":"Ukraine","page":"country-ukraine.html","co2":"0.15 Gt","share":"0.4%","historical":"1.5%","renewable":"12%","gdpLoss":"War compounded"},"USA":{"name":"United States","page":"country-usa.html","co2":"5.0 Gt","share":"14%","historical":"25%","renewable":"23%","gdpLoss":"0.3 to 0.5% GDP"},"VNM":{"name":"Vietnam","page":"country-vietnam.html","co2":"0.34 Gt","share":"0.9%","historical":"0.4%","renewable":"43%","gdpLoss":"1 to 2% GDP"}};
 
 const colorScale = d3.scaleSequential()
   .domain([0, 12000])
@@ -167,8 +189,46 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
         pendingEvent = event;
         if (!rafScheduled) { rafScheduled = true; requestAnimationFrame(flushTooltipPosition); }
       })
-      .on("mouseleave", () => { tooltip.style.display = "none"; pendingEvent = null; });
+      .on("mouseleave", () => { tooltip.style.display = "none"; pendingEvent = null; })
+      .on("click", function(event, d) {
+        const iso = ISO_N2A[String(d.id).padStart(3,"0")] || "";
+        showDetail(iso);
+      });
   });
+
+const detailPanel = document.getElementById("detail-panel");
+const detailBody = document.getElementById("detail-body");
+
+function showDetail(iso) {
+  const name = ISO_NAMES[iso] || iso || "This country";
+  const stats = COUNTRY_STATS[iso];
+  const co2 = EMISSIONS[iso];
+
+  let html = `<div class="detail-name">${name}</div>`;
+
+  if (stats) {
+    html += `<div class="detail-grid">
+      <div class="detail-cell"><div class="dv">${stats.co2 || (co2 ? Math.round(co2)+" Mt" : "—")}</div><div class="dl">Annual CO2</div></div>
+      <div class="detail-cell"><div class="dv">${stats.share || "—"}</div><div class="dl">Share of global emissions</div></div>
+      <div class="detail-cell"><div class="dv">${stats.historical || "—"}</div><div class="dl">Historical share since 1850</div></div>
+      <div class="detail-cell"><div class="dv">${stats.renewable || "—"}</div><div class="dl">Renewable electricity</div></div>
+      <div class="detail-cell" style="grid-column:1 / -1"><div class="dv">${stats.gdpLoss || "—"}</div><div class="dl">Est. annual GDP loss</div></div>
+    </div>
+    <a class="detail-link" href="${stats.page}">Full country profile →</a>`;
+  } else if (co2) {
+    html += `<div class="detail-grid">
+      <div class="detail-cell" style="grid-column:1 / -1"><div class="dv">${Math.round(co2).toLocaleString()} Mt CO₂ (2023)</div><div class="dl">Annual CO2</div></div>
+    </div>
+    <p class="detail-empty">A full profile with historical share, renewables and estimated GDP loss isn't published for ${name} yet.</p>`;
+  } else {
+    html += `<p class="detail-empty">No emissions data is published for ${name} yet on this map. <a class="detail-link" href="countries.html" style="margin-top:6px">Browse all countries →</a></p>`;
+  }
+
+  detailBody.innerHTML = html;
+  detailPanel.classList.add("open");
+}
+
+document.getElementById("detail-close").onclick = () => detailPanel.classList.remove("open");
 
 document.getElementById("search").oninput = e => {
   const q = e.target.value.toLowerCase().trim();
