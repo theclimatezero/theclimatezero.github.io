@@ -330,6 +330,16 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
 .closing-moment{padding:70px 32px 90px;text-align:center;max-width:700px;margin:0 auto;border-top:1px solid var(--line)}
 .closing-line{font-family:var(--serif);font-size:clamp(1.4rem,3.5vw,2rem);font-weight:600;color:var(--ink);line-height:1.4}
 .closing-sub{font-size:.85rem;color:var(--muted);margin-top:14px}
+
+.voice-section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:36px;margin:0 auto 60px;max-width:900px}
+.voice-form{display:grid;gap:14px;margin-top:20px}
+.voice-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.voice-form input,.voice-form textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-family:var(--sans);font-size:.9rem;color:var(--ink);outline:none;resize:vertical}
+.voice-form input:focus,.voice-form textarea:focus{border-color:var(--sky)}
+.voice-form textarea{min-height:110px}
+.voice-form label{font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;display:block}
+.voice-note{font-size:.78rem;color:var(--muted);margin-top:12px;line-height:1.6}
+@media(max-width:640px){.voice-row{grid-template-columns:1fr}}
 </style>
 
 <script>(function(){var t=localStorage.getItem('cb-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
@@ -400,6 +410,34 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   <p class="about-body">I am currently pursuing postgraduate research in International Relations at the University of Sheffield, focused on climate inequality and how communities are affected by it. My work examines the structural power dynamics in global climate governance, including how emissions responsibility, economic loss and policy influence are distributed unevenly between countries.</p>
   <p class="about-body">ClimateZero was built to present that research area as an accessible, data led resource, using figures drawn from official and academic sources rather than commentary.</p>
   <p class="about-body" style="font-size:.85rem">Every figure on this site comes from official or authoritative sources, including NASA, NOAA, the WMO, the IPCC, the IEA, IRENA, the World Bank, the IMF, the United Nations, and Our World in Data. Each statistic links to its original source.</p>
+</div>
+
+<hr class="div">
+
+<div class="voice-section">
+  <div class="sec-eye">Have your say</div>
+  <h2 class="sec-title" style="font-size:clamp(1.5rem,3.5vw,2.1rem)">What would you like to see change where you live?</h2>
+  <p style="color:var(--muted);font-size:.92rem;line-height:1.7">Tell us about your town, city or country, and the one change you'd most like to see on climate, whether that's better flood defences, cleaner air, or a government that actually turns up to the negotiating table. We read every reply, and may feature some (anonymised) in future updates to this site.</p>
+  <form class="voice-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+    <div class="voice-row">
+      <div>
+        <label for="voice-place">Town, city or country</label>
+        <input type="text" id="voice-place" name="place" placeholder="e.g. Sheffield, UK" required>
+      </div>
+      <div>
+        <label for="voice-name">Name (optional)</label>
+        <input type="text" id="voice-name" name="name" placeholder="Leave blank to stay anonymous">
+      </div>
+    </div>
+    <div>
+      <label for="voice-change">The change you'd like to see</label>
+      <textarea id="voice-change" name="change" placeholder="What's the one thing you'd change to tackle the climate crisis where you live?" required></textarea>
+    </div>
+    <div>
+      <button type="submit" class="btn-p" style="justify-self:start">Send your reply</button>
+    </div>
+    <p class="voice-note">Submissions are handled by Formspree and go straight to our inbox. We won't publish anything without asking first.</p>
+  </form>
 </div>
 
 <hr class="div">
