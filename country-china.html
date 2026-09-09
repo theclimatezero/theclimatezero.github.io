@@ -285,8 +285,18 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 .gov-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:12px}
 .gov-card-title{font-weight:600;font-size:.92rem;margin-bottom:6px}
 .gov-card-body{font-size:.85rem;color:var(--muted);line-height:1.6}
+
+html[data-theme="dark"]{
+  --bg:#14120f;--surface:#1c1a16;--surface2:#242019;--line:rgba(255,255,255,.1);
+  --ink:#f3ecdd;--muted:#a89f8c;--sky:#5aa3d6;--sky-deep:#7bb8e0;--sky-light:#1c2a33;
+  --terracotta:#e08058;--sand:#e0b787;--moss:#8fb56a;--clay:#e0895a;
+}
+html[data-theme="dark"] .cp-cell{background:#242019}
+.theme-btn{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:7px 13px;font-family:var(--mono);font-size:.7rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px;margin-left:10px}
+.theme-btn:hover{border-color:var(--sky)}
 </style>
 
+<script>(function(){var t=localStorage.getItem('cb-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 </head>
 <body>
 <nav>
@@ -302,6 +312,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
     <li><a href="compare.html">Compare</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
+  <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">◐ Theme</button>
   <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -443,6 +454,14 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
   years.forEach((yr,i)=>{ if(i%5===0 || i===years.length-1) xlabels += `<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="11" fill="#6b6353" font-family="monospace">${yr}</text>`; });
   svg.innerHTML = grid + `<path d="${area}" fill="rgba(63,141,196,0.12)"/><path d="${path}" fill="none" stroke="#296f9e" stroke-width="2.5"/>` + xlabels;
 })();
+</script>
+<script>
+function toggleTheme(){
+  var html=document.documentElement;
+  var isDark=html.getAttribute('data-theme')==='dark';
+  if(isDark){html.removeAttribute('data-theme');localStorage.setItem('cb-theme','light');}
+  else{html.setAttribute('data-theme','dark');localStorage.setItem('cb-theme','dark');}
+}
 </script>
 </body>
 </html>

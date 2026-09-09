@@ -273,9 +273,25 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 .sr-name{font-weight:600;font-size:.92rem}
 .all-countries-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-width:1160px;margin:50px auto 0;padding:0 32px}
 .ac-chip{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);font-size:.85rem}
+.sort-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1160px;margin:36px auto 0;padding:0 32px}
+.sort-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sort-btn{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;padding:8px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);color:var(--muted);cursor:pointer;transition:all .15s}
+.sort-btn:hover{border-color:var(--sky)}
+.sort-btn.active{background:var(--sky-deep);border-color:var(--sky-deep);color:#fff}
+.ac-chip .ac-val{margin-left:auto;font-family:var(--mono);font-size:.68rem;color:var(--muted)}
 .ac-chip:hover{border-color:var(--sky)}
+
+html[data-theme="dark"]{
+  --bg:#14120f;--surface:#1c1a16;--surface2:#242019;--line:rgba(255,255,255,.1);
+  --ink:#f3ecdd;--muted:#a89f8c;--sky:#5aa3d6;--sky-deep:#7bb8e0;--sky-light:#1c2a33;
+  --terracotta:#e08058;--sand:#e0b787;--moss:#8fb56a;--clay:#e0895a;
+}
+html[data-theme="dark"] .cp-cell{background:#242019}
+.theme-btn{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:7px 13px;font-family:var(--mono);font-size:.7rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px;margin-left:10px}
+.theme-btn:hover{border-color:var(--sky)}
 </style>
 
+<script>(function(){var t=localStorage.getItem('cb-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 </head>
 <body>
 <nav>
@@ -291,6 +307,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
     <li><a href="compare.html">Compare</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
+  <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">◐ Theme</button>
   <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -308,6 +325,13 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
   <div class="search-results" id="searchResults"></div>
 </div>
 
+<div class="sort-row">
+  <span class="sort-label">Sort by</span>
+  <button class="sort-btn active" data-sort="name" onclick="setSort('name')">Name</button>
+  <button class="sort-btn" data-sort="co2" onclick="setSort('co2')">Annual CO2</button>
+  <button class="sort-btn" data-sort="renewable" onclick="setSort('renewable')">Renewable electricity</button>
+  <button class="sort-btn" data-sort="deaths" onclick="setSort('deaths')">Air-pollution deaths</button>
+</div>
 <div class="all-countries-grid" id="allCountries"></div>
 
 <div style="height:70px"></div>
@@ -330,12 +354,40 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 </footer>
 
 <script>
-const COUNTRY_LIST = [{"key":"china","name":"China","flag":"🇨🇳","url":"country-china.html"},{"key":"usa","name":"United States","flag":"🇺🇸","url":"country-usa.html"},{"key":"india","name":"India","flag":"🇮🇳","url":"country-india.html"},{"key":"russia","name":"Russia","flag":"🇷🇺","url":"country-russia.html"},{"key":"japan","name":"Japan","flag":"🇯🇵","url":"country-japan.html"},{"key":"germany","name":"Germany","flag":"🇩🇪","url":"country-germany.html"},{"key":"uk","name":"United Kingdom","flag":"🇬🇧","url":"country-uk.html"},{"key":"france","name":"France","flag":"🇫🇷","url":"country-france.html"},{"key":"italy","name":"Italy","flag":"🇮🇹","url":"country-italy.html"},{"key":"spain","name":"Spain","flag":"🇪🇸","url":"country-spain.html"},{"key":"poland","name":"Poland","flag":"🇵🇱","url":"country-poland.html"},{"key":"netherlands","name":"Netherlands","flag":"🇳🇱","url":"country-netherlands.html"},{"key":"sweden","name":"Sweden","flag":"🇸🇪","url":"country-sweden.html"},{"key":"norway","name":"Norway","flag":"🇳🇴","url":"country-norway.html"},{"key":"denmark","name":"Denmark","flag":"🇩🇰","url":"country-denmark.html"},{"key":"ukraine","name":"Ukraine","flag":"🇺🇦","url":"country-ukraine.html"},{"key":"turkey","name":"Turkey","flag":"🇹🇷","url":"country-turkey.html"},{"key":"pakistan","name":"Pakistan","flag":"🇵🇰","url":"country-pakistan.html"},{"key":"bangladesh","name":"Bangladesh","flag":"🇧🇩","url":"country-bangladesh.html"},{"key":"nigeria","name":"Nigeria","flag":"🇳🇬","url":"country-nigeria.html"},{"key":"ethiopia","name":"Ethiopia","flag":"🇪🇹","url":"country-ethiopia.html"},{"key":"kenya","name":"Kenya","flag":"🇰🇪","url":"country-kenya.html"},{"key":"south africa","name":"South Africa","flag":"🇿🇦","url":"country-southafrica.html"},{"key":"brazil","name":"Brazil","flag":"🇧🇷","url":"country-brazil.html"},{"key":"australia","name":"Australia","flag":"🇦🇺","url":"country-australia.html"},{"key":"indonesia","name":"Indonesia","flag":"🇮🇩","url":"country-indonesia.html"},{"key":"canada","name":"Canada","flag":"🇨🇦","url":"country-canada.html"},{"key":"saudi arabia","name":"Saudi Arabia","flag":"🇸🇦","url":"country-saudiarabia.html"},{"key":"mexico","name":"Mexico","flag":"🇲🇽","url":"country-mexico.html"},{"key":"philippines","name":"Philippines","flag":"🇵🇭","url":"country-philippines.html"},{"key":"tuvalu","name":"Tuvalu","flag":"🇹🇻","url":"country-tuvalu.html"},{"key":"thailand","name":"Thailand","flag":"🇹🇭","url":"country-thailand.html"},{"key":"vietnam","name":"Vietnam","flag":"🇻🇳","url":"country-vietnam.html"},{"key":"argentina","name":"Argentina","flag":"🇦🇷","url":"country-argentina.html"},{"key":"egypt","name":"Egypt","flag":"🇪🇬","url":"country-egypt.html"},{"key":"morocco","name":"Morocco","flag":"🇲🇦","url":"country-morocco.html"},{"key":"sri lanka","name":"Sri Lanka","flag":"🇱🇰","url":"country-srilanka.html"},{"key":"uae","name":"United Arab Emirates","flag":"🇦🇪","url":"country-uae.html"},{"key":"south korea","name":"South Korea","flag":"🇰🇷","url":"country-southkorea.html"}];
+const COUNTRY_LIST = [{"key":"china","name":"China","flag":"\ud83c\udde8\ud83c\uddf3","url":"country-china.html","co2":11.4,"renewable":31.0,"deaths":1284182},{"key":"usa","name":"United States","flag":"\ud83c\uddfa\ud83c\uddf8","url":"country-usa.html","co2":5.0,"renewable":23.0,"deaths":104799},{"key":"india","name":"India","flag":"\ud83c\uddee\ud83c\uddf3","url":"country-india.html","co2":null,"renewable":null,"deaths":936093},{"key":"russia","name":"Russia","flag":"\ud83c\uddf7\ud83c\uddfa","url":"country-russia.html","co2":1.9,"renewable":20.0,"deaths":98014},{"key":"japan","name":"Japan","flag":"\ud83c\uddef\ud83c\uddf5","url":"country-japan.html","co2":1.0,"renewable":24.0,"deaths":50584},{"key":"germany","name":"Germany","flag":"\ud83c\udde9\ud83c\uddea","url":"country-germany.html","co2":0.6,"renewable":52.0,"deaths":39017},{"key":"uk","name":"United Kingdom","flag":"\ud83c\uddec\ud83c\udde7","url":"country-uk.html","co2":0.3,"renewable":47.0,"deaths":19798},{"key":"france","name":"France","flag":"\ud83c\uddeb\ud83c\uddf7","url":"country-france.html","co2":0.28,"renewable":27.0,"deaths":17236},{"key":"italy","name":"Italy","flag":"\ud83c\uddee\ud83c\uddf9","url":"country-italy.html","co2":0.31,"renewable":39.0,"deaths":30265},{"key":"spain","name":"Spain","flag":"\ud83c\uddea\ud83c\uddf8","url":"country-spain.html","co2":0.22,"renewable":50.0,"deaths":13030},{"key":"poland","name":"Poland","flag":"\ud83c\uddf5\ud83c\uddf1","url":"country-poland.html","co2":0.29,"renewable":27.0,"deaths":35297},{"key":"netherlands","name":"Netherlands","flag":"\ud83c\uddf3\ud83c\uddf1","url":"country-netherlands.html","co2":0.13,"renewable":48.0,"deaths":4781},{"key":"sweden","name":"Sweden","flag":"\ud83c\uddf8\ud83c\uddea","url":"country-sweden.html","co2":0.037,"renewable":69.0,"deaths":1554},{"key":"norway","name":"Norway","flag":"\ud83c\uddf3\ud83c\uddf4","url":"country-norway.html","co2":0.037,"renewable":98.0,"deaths":730},{"key":"denmark","name":"Denmark","flag":"\ud83c\udde9\ud83c\uddf0","url":"country-denmark.html","co2":0.028,"renewable":87.0,"deaths":1558},{"key":"ukraine","name":"Ukraine","flag":"\ud83c\uddfa\ud83c\udde6","url":"country-ukraine.html","co2":0.15,"renewable":12.0,"deaths":56596},{"key":"turkey","name":"Turkey","flag":"\ud83c\uddf9\ud83c\uddf7","url":"country-turkey.html","co2":0.44,"renewable":42.0,"deaths":39835},{"key":"pakistan","name":"Pakistan","flag":"\ud83c\uddf5\ud83c\uddf0","url":"country-pakistan.html","co2":0.24,"renewable":33.0,"deaths":118647},{"key":"bangladesh","name":"Bangladesh","flag":"\ud83c\udde7\ud83c\udde9","url":"country-bangladesh.html","co2":0.12,"renewable":5.0,"deaths":73416},{"key":"nigeria","name":"Nigeria","flag":"\ud83c\uddf3\ud83c\uddec","url":"country-nigeria.html","co2":0.13,"renewable":19.0,"deaths":106962},{"key":"ethiopia","name":"Ethiopia","flag":"\ud83c\uddea\ud83c\uddf9","url":"country-ethiopia.html","co2":0.02,"renewable":99.0,"deaths":24517},{"key":"kenya","name":"Kenya","flag":"\ud83c\uddf0\ud83c\uddea","url":"country-kenya.html","co2":0.02,"renewable":90.0,"deaths":8792},{"key":"south africa","name":"South Africa","flag":"\ud83c\uddff\ud83c\udde6","url":"country-southafrica.html","co2":0.4,"renewable":12.0,"deaths":20667},{"key":"brazil","name":"Brazil","flag":"\ud83c\udde7\ud83c\uddf7","url":"country-brazil.html","co2":0.47,"renewable":89.0,"deaths":88548},{"key":"australia","name":"Australia","flag":"\ud83c\udde6\ud83c\uddfa","url":"country-australia.html","co2":0.39,"renewable":35.0,"deaths":3598},{"key":"indonesia","name":"Indonesia","flag":"\ud83c\uddee\ud83c\udde9","url":"country-indonesia.html","co2":0.47,"renewable":19.0,"deaths":103142},{"key":"canada","name":"Canada","flag":"\ud83c\udde8\ud83c\udde6","url":"country-canada.html","co2":0.54,"renewable":67.0,"deaths":7657},{"key":"saudi arabia","name":"Saudi Arabia","flag":"\ud83c\uddf8\ud83c\udde6","url":"country-saudiarabia.html","co2":0.51,"renewable":1.0,"deaths":5301},{"key":"mexico","name":"Mexico","flag":"\ud83c\uddf2\ud83c\uddfd","url":"country-mexico.html","co2":0.43,"renewable":25.0,"deaths":36305},{"key":"philippines","name":"Philippines","flag":"\ud83c\uddf5\ud83c\udded","url":"country-philippines.html","co2":0.15,"renewable":31.0,"deaths":60974},{"key":"tuvalu","name":"Tuvalu","flag":"\ud83c\uddf9\ud83c\uddfb","url":"country-tuvalu.html","co2":1.0,"renewable":45.0,"deaths":null},{"key":"thailand","name":"Thailand","flag":"\ud83c\uddf9\ud83c\udded","url":"country-thailand.html","co2":0.28,"renewable":16.0,"deaths":30517},{"key":"vietnam","name":"Vietnam","flag":"\ud83c\uddfb\ud83c\uddf3","url":"country-vietnam.html","co2":0.34,"renewable":43.0,"deaths":43365},{"key":"egypt","name":"Egypt","flag":"\ud83c\uddea\ud83c\uddec","url":"country-egypt.html","co2":0.25,"renewable":12.0,"deaths":63479},{"key":"morocco","name":"Morocco","flag":"\ud83c\uddf2\ud83c\udde6","url":"country-morocco.html","co2":0.075,"renewable":38.0,"deaths":17606},{"key":"sri lanka","name":"Sri Lanka","flag":"\ud83c\uddf1\ud83c\uddf0","url":"country-srilanka.html","co2":0.02,"renewable":52.0,"deaths":9674},{"key":"uae","name":"United Arab Emirates","flag":"\ud83c\udde6\ud83c\uddea","url":"country-uae.html","co2":0.24,"renewable":7.0,"deaths":989},{"key":"south korea","name":"South Korea","flag":"\ud83c\uddf0\ud83c\uddf7","url":"country-southkorea.html","co2":0.6,"renewable":9.0,"deaths":17899}];
+
+let currentSort = 'name';
+
+function setSort(field){
+  currentSort = field;
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort === field));
+  buildAllChips();
+}
+
+function fmtVal(c, field){
+  if (field === 'name') return '';
+  const v = c[field];
+  if (v === null || v === undefined) return '<span class="ac-val">no data</span>';
+  if (field === 'co2') return `<span class="ac-val">${v} Gt</span>`;
+  if (field === 'renewable') return `<span class="ac-val">${v}%</span>`;
+  if (field === 'deaths') return `<span class="ac-val">${v.toLocaleString()}</span>`;
+  return '';
+}
 
 function buildAllChips(){
-  const sorted = [...COUNTRY_LIST].sort((a,b)=>a.name.localeCompare(b.name));
+  let sorted;
+  if (currentSort === 'name') {
+    sorted = [...COUNTRY_LIST].sort((a,b)=>a.name.localeCompare(b.name));
+  } else {
+    // countries with no data for this field sort to the end, not the top
+    const withData = COUNTRY_LIST.filter(c => c[currentSort] !== null && c[currentSort] !== undefined);
+    const withoutData = COUNTRY_LIST.filter(c => c[currentSort] === null || c[currentSort] === undefined);
+    withData.sort((a,b) => b[currentSort] - a[currentSort]);
+    withoutData.sort((a,b) => a.name.localeCompare(b.name));
+    sorted = [...withData, ...withoutData];
+  }
   document.getElementById('allCountries').innerHTML = sorted.map(c =>
-    `<a href="${c.url}" class="ac-chip"><span>${c.flag}</span><span>${c.name}</span></a>`
+    `<a href="${c.url}" class="ac-chip"><span>${c.flag}</span><span>${c.name}</span>${fmtVal(c, currentSort)}</a>`
   ).join('');
 }
 
@@ -356,6 +408,14 @@ function doSearch(){
 document.getElementById('countrySearch').addEventListener('input', doSearch);
 document.getElementById('countrySearch').addEventListener('keydown', function(e){ if(e.key==='Enter') doSearch(); });
 buildAllChips();
+</script>
+<script>
+function toggleTheme(){
+  var html=document.documentElement;
+  var isDark=html.getAttribute('data-theme')==='dark';
+  if(isDark){html.removeAttribute('data-theme');localStorage.setItem('cb-theme','light');}
+  else{html.setAttribute('data-theme','dark');localStorage.setItem('cb-theme','dark');}
+}
 </script>
 </body>
 </html>
