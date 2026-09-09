@@ -353,6 +353,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
 .canon-num.owed{color:#e08058}
 .canon-vs{font-family:var(--mono);font-size:.75rem;color:#a89f8c}
 .canon-desc{font-size:.85rem;color:#c9c2b0;line-height:1.6}
+
+.clock-widget{background:#14120f;color:#f3ecdd;border-radius:16px;padding:32px 28px;text-align:center;font-family:var(--sans);max-width:640px;margin:0 auto}
+.clock-eyebrow{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#7bb8e0;margin-bottom:14px}
+.clock-digits{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.clock-unit{min-width:60px}
+.clock-num{font-family:var(--serif);font-weight:900;font-size:2rem;line-height:1;color:#f3ecdd}
+.clock-lab{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:#a89f8c;margin-top:4px}
+.clock-bar{height:8px;background:#2a251e;border-radius:4px;overflow:hidden;margin:18px auto 10px;max-width:420px}
+.clock-bar-fill{height:100%;background:linear-gradient(90deg,#8fb56a,#e0b787,#e0895a)}
+.clock-sub{font-size:.78rem;color:#c9c2b0;line-height:1.6;max-width:44ch;margin:0 auto}
+.clock-src{font-family:var(--mono);font-size:.6rem;color:#7d7565;margin-top:14px}
+.clock-src a{color:#7bb8e0;text-decoration:none}
+@media(max-width:640px){.clock-widget{padding:26px 18px}.clock-num{font-size:1.5rem}.clock-unit{min-width:48px}}
 </style>
 
 <script>(function(){var t=localStorage.getItem('cb-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
@@ -415,8 +428,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
     <li><a href="compare.html">Compare</a></li>
     <li><a href="justice-index.html">Justice Gap</a></li>
     <li><a href="loss-and-damage.html">Loss &amp; Damage</a></li>
-    <li><a href="carbon-clock.html">Carbon Clock</a></li>
-    <li><a href="who-is-responsible.html">Who's Responsible</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
   <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">◐ Theme</button>
@@ -462,6 +473,16 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
 <div class="live-ticker">
   <div class="live-ticker-num" id="live-co2">0</div>
   <div class="live-ticker-lab">Tonnes of CO2 emitted worldwide since you opened this page</div>
+</div>
+
+<div class="section" style="padding-bottom:0">
+  <div class="clock-widget" id="clockWidget">
+    <div class="clock-eyebrow">Remaining global carbon budget, 1.5°C</div>
+    <div class="clock-digits" id="clockDigits"></div>
+    <div class="clock-bar"><div class="clock-bar-fill" id="clockBar" style="width:0%"></div></div>
+    <div class="clock-sub">At current emission rates, the remaining budget runs out around <strong id="clockDate">—</strong>.</div>
+    <div class="clock-src">Source: <a href="https://www.ipcc.ch/report/ar6/wg1/" target="_blank">IPCC AR6 WG1</a>, remaining budget for 50% chance of &lt;1.5°C from Jan 2020: 500 GtCO2, depleted at this site's published rate of ~36.8 GtCO2/year. <a href="methodology.html" style="color:#7bb8e0">Full methodology</a></div>
+  </div>
 </div>
 
 <div class="section" style="padding-bottom:20px">
@@ -549,7 +570,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
       <div class="fbrand-tag">The data behind net zero.</div>
       <p class="fbrand-sub">Tracking who contributes to climate change, who bears the costs, and how the world is responding.</p>
     </div>
-    <div class="fcol"><h4>Tools</h4><ul><li><a href="justice-index.html">Justice Gap index</a></li><li><a href="loss-and-damage.html">Loss &amp; Damage tracker</a></li><li><a href="carbon-clock.html">Carbon Clock</a></li><li><a href="who-is-responsible.html">Who is Responsible</a></li><li><a href="explore.html">World map</a></li><li><a href="compare.html">Compare countries</a></li><li><a href="renewable.html">Renewable energy</a></li><li><a href="five.html">Five numbers</a></li><li><a href="share-cards.html">Shareable stats</a></li></ul></div>
+    <div class="fcol"><h4>Tools</h4><ul><li><a href="justice-index.html">Justice Gap index</a></li><li><a href="loss-and-damage.html">Loss &amp; Damage tracker</a></li><li><a href="explore.html">World map</a></li><li><a href="compare.html">Compare countries</a></li><li><a href="renewable.html">Renewable energy</a></li><li><a href="five.html">Five numbers</a></li><li><a href="share-cards.html">Shareable stats</a></li></ul></div>
     <div class="fcol"><h4>Data</h4><ul><li><a href="methodology.html">Sources &amp; methodology</a></li><li><a href="climatezero-country-data.csv">Download dataset (CSV)</a></li><li><a href="impact.html">Impact data</a></li><li><a href="https://ourworldindata.org" target="_blank">Our World in Data</a></li><li><a href="https://www.ipcc.ch" target="_blank">IPCC</a></li></ul></div>
     <div class="fcol"><h4>About</h4><ul><li><a href="about.html">Our story</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="mailto:theclimatebill@gmail.com">theclimatebill@gmail.com</a></li></ul></div>
   </div>
@@ -571,6 +592,53 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   }
   setInterval(tick, 200);
   tick();
+})();
+</script>
+<script>
+// The 1.5°C carbon clock: remaining global carbon budget per IPCC AR6 WG1
+// (2021), 500 GtCO2 from 2020-01-01 for a 50% chance of staying under
+// 1.5°C, depleted at this site's own published 2023 global CO2 figure.
+(function(){
+  var BUDGET_START_TONNES = 500e9;
+  var BUDGET_START_DATE = new Date("2020-01-01T00:00:00Z");
+  var ANNUAL_EMISSIONS_TONNES = 36.8e9;
+  var TONNES_PER_MS = ANNUAL_EMISSIONS_TONNES / (365.25*24*60*60*1000);
+
+  function fmtDuration(ms){
+    var totalSec = Math.floor(ms/1000);
+    var years = Math.floor(totalSec/(365.25*24*3600));
+    var rem = totalSec - years*365.25*24*3600;
+    var days = Math.floor(rem/(24*3600)); rem -= days*24*3600;
+    var hours = Math.floor(rem/3600); rem -= hours*3600;
+    var mins = Math.floor(rem/60);
+    var secs = Math.floor(rem - mins*60);
+    return {years:years, days:days, hours:hours, mins:mins, secs:secs};
+  }
+
+  function tickClock(){
+    var elapsedMs = Date.now() - BUDGET_START_DATE.getTime();
+    var used = elapsedMs * TONNES_PER_MS;
+    var remaining = Math.max(BUDGET_START_TONNES - used, 0);
+    var msLeft = remaining / TONNES_PER_MS;
+    var depletionDate = new Date(Date.now() + msLeft);
+    var pctUsed = (used/BUDGET_START_TONNES)*100;
+    var d = fmtDuration(msLeft);
+    var digitsEl = document.getElementById("clockDigits");
+    if (digitsEl) {
+      digitsEl.innerHTML =
+        '<div class="clock-unit"><div class="clock-num">'+d.years+'</div><div class="clock-lab">Years</div></div>' +
+        '<div class="clock-unit"><div class="clock-num">'+d.days+'</div><div class="clock-lab">Days</div></div>' +
+        '<div class="clock-unit"><div class="clock-num">'+d.hours+'</div><div class="clock-lab">Hours</div></div>' +
+        '<div class="clock-unit"><div class="clock-num">'+String(d.mins).padStart(2,'0')+'</div><div class="clock-lab">Min</div></div>' +
+        '<div class="clock-unit"><div class="clock-num">'+String(d.secs).padStart(2,'0')+'</div><div class="clock-lab">Sec</div></div>';
+    }
+    var barEl = document.getElementById("clockBar");
+    if (barEl) barEl.style.width = Math.min(pctUsed,100).toFixed(2)+"%";
+    var dateEl = document.getElementById("clockDate");
+    if (dateEl) dateEl.textContent = depletionDate.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
 })();
 </script>
 <script>
