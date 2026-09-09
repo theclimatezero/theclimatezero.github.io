@@ -454,9 +454,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   <div class="canon-inner">
     <div class="canon-eyebrow">The number this site exists to explain</div>
     <div class="canon-figures">
-      <span class="canon-num pledge">$822m</span>
+      <span class="canon-num pledge" data-countup data-target="822" data-prefix="$" data-suffix="m">$0m</span>
       <span class="canon-vs">pledged, against</span>
-      <span class="canon-num owed">$395bn</span>
+      <span class="canon-num owed" data-countup data-target="395" data-prefix="$" data-suffix="bn">$0bn</span>
       <span class="canon-vs">owed every year</span>
     </div>
     <p class="canon-desc">The world agreed to compensate countries for climate damage they did not cause. What has actually been pledged covers about one 480th of a single year's cost. <a href="impact.html#paying" style="color:#5aa3d6;text-decoration:none">See the full breakdown</a></p>
@@ -464,10 +464,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
 </div>
 
 <div class="hub-strip">
-  <div class="hub-cell"><div class="hub-num">36.8 Gt</div><div class="hub-lab">Global CO2, 2023</div></div>
-  <div class="hub-cell"><div class="hub-num">25%</div><div class="hub-lab">US share of CO2 since 1850</div></div>
-  <div class="hub-cell"><div class="hub-num">585 GW</div><div class="hub-lab">Renewables added in 2024</div></div>
-  <div class="hub-cell"><div class="hub-num">546,000</div><div class="hub-lab">Killed by heat each year</div></div>
+  <div class="hub-cell"><div class="hub-num" data-countup data-target="36.8" data-decimals="1" data-suffix=" Gt">0 Gt</div><div class="hub-lab">Global CO2, 2023</div></div>
+  <div class="hub-cell"><div class="hub-num" data-countup data-target="25" data-suffix="%">0%</div><div class="hub-lab">US share of CO2 since 1850</div></div>
+  <div class="hub-cell"><div class="hub-num" data-countup data-target="585" data-suffix=" GW">0 GW</div><div class="hub-lab">Renewables added in 2024</div></div>
+  <div class="hub-cell"><div class="hub-num" data-countup data-target="546000" data-locale="1">0</div><div class="hub-lab">Killed by heat each year</div></div>
 </div>
 
 <div class="live-ticker">
@@ -639,6 +639,79 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   }
   tickClock();
   setInterval(tickClock, 1000);
+})();
+</script>
+<script>
+// Register the service worker so the site is installable and works
+// offline once visited. Fails silently on browsers/paths that don't
+// support it — this is a progressive enhancement, not a requirement.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/sw.js').catch(function(){});
+  });
+}
+</script>
+<script>
+// A small easter egg for anyone curious enough to triple-click the logo.
+(function(){
+  var clicks = 0, timer = null;
+  document.addEventListener('DOMContentLoaded', function(){
+    var logo = document.querySelector('.nav-logo');
+    if (!logo) return;
+    logo.style.cursor = 'pointer';
+    logo.addEventListener('click', function(){
+      clicks++;
+      clearTimeout(timer);
+      timer = setTimeout(function(){ clicks = 0; }, 700);
+      if (clicks === 3) {
+        clicks = 0;
+        var msg = document.createElement('div');
+        msg.textContent = "You found it. Thanks for actually looking closely at this site, not just the numbers.";
+        msg.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#14120f;color:#f3ecdd;padding:14px 22px;border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,.25);max-width:88vw;text-align:center";
+        document.body.appendChild(msg);
+        setTimeout(function(){ msg.style.transition='opacity .6s'; msg.style.opacity='0'; setTimeout(function(){ msg.remove(); }, 600); }, 3200);
+      }
+    });
+  });
+})();
+</script>
+<script>
+// Scroll-triggered count-up: numbers animate from 0 to their real
+// published value the first time they scroll into view, rather than
+// appearing instantly. Purely presentational — every target is the same
+// figure already shown elsewhere on the site.
+(function(){
+  var els = document.querySelectorAll('[data-countup]');
+  if (!els.length) return;
+  function animate(el){
+    var target = parseFloat(el.getAttribute('data-target'));
+    var decimals = parseInt(el.getAttribute('data-decimals')||'0', 10);
+    var prefix = el.getAttribute('data-prefix')||'';
+    var suffix = el.getAttribute('data-suffix')||'';
+    var useLocale = el.hasAttribute('data-locale');
+    var duration = 1100, start = null;
+    function frame(ts){
+      if (!start) start = ts;
+      var p = Math.min((ts-start)/duration, 1);
+      var eased = 1 - Math.pow(1-p, 3);
+      var val = target * eased;
+      var text = decimals ? val.toFixed(decimals) : Math.round(val).toString();
+      if (useLocale) text = Math.round(val).toLocaleString();
+      el.textContent = prefix + text + suffix;
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) { animate(entry.target); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.4 });
+    els.forEach(function(el){ obs.observe(el); });
+  } else {
+    els.forEach(animate);
+  }
 })();
 </script>
 <script>

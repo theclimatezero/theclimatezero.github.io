@@ -247,12 +247,61 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
 const detailPanel = document.getElementById("detail-panel");
 const detailBody = document.getElementById("detail-body");
 
+// Parse the first number(s) out of a stat string like "1.5 to 2% GDP" or
+// "36%" and return their average as a plain float. Returns null if nothing
+// numeric is found, so callers can skip that axis rather than fake a value.
+function parseNum(str) {
+  if (!str) return null;
+  const matches = String(str).replace(/,/g, "").match(/[\d.]+/g);
+  if (!matches) return null;
+  const nums = matches.map(Number);
+  return nums.reduce((a,b)=>a+b, 0) / nums.length;
+}
+
+// A small generative "climate fingerprint": a five-axis radar shape drawn
+// directly from a country's own published numbers (historical share,
+// current share, renewable %, GDP loss %, deaths), so every country gets a
+// unique, data-true mark rather than a stock icon. Missing axes collapse
+// to the centre rather than being invented.
+function fingerprintSVG(stats) {
+  const axes = [
+    { key: "historical", max: 25, val: parseNum(stats.historical) },
+    { key: "share", max: 31, val: parseNum(stats.share) },
+    { key: "renewable", max: 100, val: parseNum(stats.renewable) },
+    { key: "gdpLoss", max: 5, val: parseNum(stats.gdpLoss) },
+    { key: "deaths", max: 1300000, val: stats.deaths ? parseNum(stats.deaths) : null },
+  ];
+  const cx = 45, cy = 45, r = 36;
+  const pts = axes.map((a, i) => {
+    const frac = a.val === null ? 0 : Math.min(a.val / a.max, 1);
+    const angle = (Math.PI * 2 * i) / axes.length - Math.PI / 2;
+    return [cx + Math.cos(angle) * r * frac, cy + Math.sin(angle) * r * frac];
+  });
+  const poly = pts.map(p => p.join(",")).join(" ");
+  // Colour reads from the data itself: greener with more renewables,
+  // warmer with a larger historical emissions share.
+  const renewFrac = Math.min((parseNum(stats.renewable) || 0) / 100, 1);
+  const histFrac = Math.min((parseNum(stats.historical) || 0) / 25, 1);
+  const hue = 150 - histFrac * 130 + renewFrac * 20; // green -> orange/red
+  const fill = `hsl(${Math.round(hue)}, 62%, ${52 + renewFrac*10}%)`;
+  return `<svg viewBox="0 0 90 90" width="72" height="72" style="flex-shrink:0">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="currentColor" stroke-opacity=".12"/>
+    <polygon points="${poly}" fill="${fill}" fill-opacity=".55" stroke="${fill}" stroke-width="1.5"/>
+  </svg>`;
+}
+
 function showDetail(iso) {
   const name = ISO_NAMES[iso] || iso || "This country";
   const stats = COUNTRY_STATS[iso];
   const co2 = EMISSIONS[iso];
 
-  let html = `<div class="detail-name">${name}</div>`;
+  let html = stats
+    ? `<div style="display:flex;align-items:center;gap:14px;margin-bottom:2px">
+        ${fingerprintSVG(stats)}
+        <div><div class="detail-name" style="margin-bottom:0">${name}</div>
+        <button class="detail-link" style="background:none;border:none;cursor:pointer;padding:0;font-family:inherit;margin-top:4px" onclick="sonifyCountry('${iso}')">🔊 Hear this country's data</button></div>
+      </div>`
+    : `<div class="detail-name">${name}</div>`;
 
   if (stats) {
     html += `<div class="detail-grid">
@@ -335,6 +384,41 @@ function toggleTheme(){
   var isDark=html.getAttribute('data-theme')==='dark';
   if(isDark){html.removeAttribute('data-theme');localStorage.setItem('cb-theme','light');}
   else{html.setAttribute('data-theme','dark');localStorage.setItem('cb-theme','dark');}
+}
+
+// Turns a country's own five headline stats into a short sequence of
+// tones, so its data profile can be heard as well as read. Each stat is
+// normalised to the same 0-1 scale used in the fingerprint above and
+// mapped to a pitch between 220Hz and 880Hz; nothing here is decorative
+// noise, every note corresponds to a real published number.
+let audioCtx;
+function sonifyCountry(iso) {
+  const stats = COUNTRY_STATS[iso];
+  if (!stats) return;
+  audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  const axes = [
+    { label: "Historical share", val: parseNum(stats.historical), max: 25 },
+    { label: "Current share", val: parseNum(stats.share), max: 31 },
+    { label: "Renewable electricity", val: parseNum(stats.renewable), max: 100 },
+    { label: "GDP loss", val: parseNum(stats.gdpLoss), max: 5 },
+    { label: "Air pollution deaths", val: stats.deaths ? parseNum(stats.deaths) : null, max: 1300000 },
+  ];
+  const now = audioCtx.currentTime;
+  axes.forEach((a, i) => {
+    const frac = a.val === null ? 0.02 : Math.min(a.val / a.max, 1);
+    const freq = 220 + frac * 660;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = freq;
+    const t0 = now + i * 0.32;
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(0.18, t0 + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 0.32);
+  });
 }
 
 function copyShareLink(){
