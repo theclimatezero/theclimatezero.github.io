@@ -283,7 +283,8 @@ function showDetail(iso) {
       html += `<p class="detail-empty" style="margin-top:14px;color:#555">${stats.status}</p>`;
     }
 
-    html += `<a class="detail-link" href="${stats.page}">Full country profile →</a>`;
+    html += `<a class="detail-link" href="${stats.page}">Full country profile →</a>
+    <button class="detail-link" style="background:none;border:none;cursor:pointer;margin-left:14px;font-family:inherit" onclick="copyShareLink()">🔗 Copy link</button>`;
   } else if (co2) {
     html += `<div class="detail-grid">
       <div class="detail-cell" style="grid-column:1 / -1"><div class="dv">${Math.round(co2).toLocaleString()} Mt CO₂ (2023)</div><div class="dl">Annual CO2</div></div>
@@ -295,9 +296,29 @@ function showDetail(iso) {
 
   detailBody.innerHTML = html;
   detailPanel.classList.add("open");
+
+  // Make every country view shareable: reflect it in the URL so a link
+  // like explore.html?country=IND opens straight to that panel.
+  const url = new URL(window.location);
+  url.searchParams.set("country", iso);
+  window.history.replaceState({}, "", url);
 }
 
-document.getElementById("detail-close").onclick = () => detailPanel.classList.remove("open");
+document.getElementById("detail-close").onclick = () => {
+  detailPanel.classList.remove("open");
+  const url = new URL(window.location);
+  url.searchParams.delete("country");
+  window.history.replaceState({}, "", url);
+};
+
+// On load, open straight to a shared country if one is in the URL.
+(function openFromUrl(){
+  const params = new URLSearchParams(window.location.search);
+  const iso = params.get("country");
+  if (iso && (COUNTRY_STATS[iso] || EMISSIONS[iso])) {
+    setTimeout(() => showDetail(iso), 400);
+  }
+})();
 
 document.getElementById("search").oninput = e => {
   const q = e.target.value.toLowerCase().trim();
@@ -314,6 +335,15 @@ function toggleTheme(){
   var isDark=html.getAttribute('data-theme')==='dark';
   if(isDark){html.removeAttribute('data-theme');localStorage.setItem('cb-theme','light');}
   else{html.setAttribute('data-theme','dark');localStorage.setItem('cb-theme','dark');}
+}
+
+function copyShareLink(){
+  navigator.clipboard.writeText(window.location.href).then(()=>{
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent = "✓ Copied";
+    setTimeout(()=>{ btn.textContent = old; }, 1500);
+  }).catch(()=>{});
 }
 </script>
 </body>
