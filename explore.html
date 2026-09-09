@@ -15,6 +15,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
+<script>(function(){var t=localStorage.getItem('cb-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:system-ui,-apple-system,sans-serif;background:#f5f4f0;color:#1a1a18}
@@ -54,16 +55,53 @@ nav a.active{color:#1a1a18;font-weight:500}
 .detail-cell .dl{font-size:10.5px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
 .detail-link{display:inline-block;margin-top:16px;font-size:13px;color:#3f8dc4;text-decoration:none;font-weight:500}
 .detail-link:hover{text-decoration:underline}
-@media(max-width:640px){.detail-panel{left:16px;width:auto}}
+@media(max-width:640px){.detail-panel{left:16px;right:16px;width:auto;top:auto;bottom:16px;max-height:60vh}}
 .tooltip .t-name{font-weight:500;font-size:13px;margin-bottom:2px;color:#1a1a18}
 .tooltip .t-val{color:#777}
 
 .no-data{fill:#e4e2dc}
 .ocean{fill:#d4e4ef}
 .graticule{fill:none;stroke:#c0d4e0;stroke-width:0.3}
-.country-path{stroke:#fff;stroke-width:0.4;cursor:pointer;transition:opacity 0.12s ease,stroke-width 0.12s ease}
+.country-path{stroke:#fff;stroke-width:0.4;cursor:pointer;transition:opacity 0.12s ease,stroke-width 0.12s ease;touch-action:manipulation}
 .country-path:hover{stroke:#555;stroke-width:0.8;opacity:0.85}
 #map-svg-wrap svg{will-change:auto}
+
+.theme-btn{background:#fff;border:1px solid #ccc;border-radius:20px;padding:6px 12px;font-size:12px;color:#777;cursor:pointer;display:flex;align-items:center;gap:6px}
+.theme-btn:hover{border-color:#999}
+
+html[data-theme="dark"] body{background:#14120f;color:#f3ecdd}
+html[data-theme="dark"] header{background:#1c1a16;border-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] .logo{color:#f3ecdd}
+html[data-theme="dark"] nav a{color:#a89f8c}
+html[data-theme="dark"] nav a:hover,html[data-theme="dark"] nav a.active{color:#f3ecdd}
+html[data-theme="dark"] .hero{background:#1c1a16;border-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] #map-svg-wrap{background:#1c2a33}
+html[data-theme="dark"] .ocean{fill:#233642}
+html[data-theme="dark"] .graticule{stroke:#2a3d47}
+html[data-theme="dark"] .no-data{fill:#242019}
+html[data-theme="dark"] .country-path{stroke:#14120f}
+html[data-theme="dark"] .below{background:#1c1a16;border-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] .search-wrap label{color:#a89f8c}
+html[data-theme="dark"] .search-wrap input{background:#242019;color:#f3ecdd;border-color:#3a352c}
+html[data-theme="dark"] .example{color:#6b6353}
+html[data-theme="dark"] .tooltip{background:#1c1a16;border-color:#3a352c}
+html[data-theme="dark"] .tooltip .t-name{color:#f3ecdd}
+html[data-theme="dark"] .tooltip .t-val{color:#a89f8c}
+html[data-theme="dark"] .detail-panel{background:#1c1a16;border-color:#3a352c}
+html[data-theme="dark"] .detail-name{color:#f3ecdd}
+html[data-theme="dark"] .detail-cell{background:#242019}
+html[data-theme="dark"] .detail-cell .dv{color:#f3ecdd}
+html[data-theme="dark"] .theme-btn{background:#1c1a16;border-color:#3a352c;color:#a89f8c}
+
+@media(max-width:640px){
+  .hero{padding:1.1rem 1rem 0.8rem}
+  .hero h1{font-size:19px}
+  .below{padding:1rem}
+  .search-wrap{width:100%}
+  .search-wrap input{flex:1;width:auto}
+  header{padding:0.85rem 1rem}
+  nav{gap:0.9rem;font-size:12.5px}
+}
 </style>
 </head>
 <body>
@@ -78,6 +116,7 @@ nav a.active{color:#1a1a18;font-weight:500}
       <a href="https://theclimatezero.github.io/renewable.html">Renewable energy</a>
       <a href="https://theclimatezero.github.io/compare.html">Compare</a>
       <a href="https://theclimatezero.github.io/about.html">About</a>
+      <button class="theme-btn" onclick="toggleTheme()">◐ Theme</button>
     </nav>
   </header>
 
@@ -193,6 +232,15 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
       .on("click", function(event, d) {
         const iso = ISO_N2A[String(d.id).padStart(3,"0")] || "";
         showDetail(iso);
+      })
+      .on("touchstart", function(event, d) {
+        // On touch devices there's no hover, so show the name/value
+        // tooltip briefly on first tap, then let the click handler above
+        // open the full detail panel.
+        const iso = ISO_N2A[String(d.id).padStart(3,"0")];
+        if (!iso || !EMISSIONS[iso]) return;
+        document.getElementById("t-name").textContent = ISO_NAMES[iso]||iso;
+        document.getElementById("t-val").textContent = Math.round(EMISSIONS[iso]).toLocaleString()+" Mt CO₂ (2023)";
       });
   });
 
@@ -260,6 +308,13 @@ document.getElementById("search").oninput = e => {
     return name.includes(q) ? 1 : 0.1;
   });
 };
+
+function toggleTheme(){
+  var html=document.documentElement;
+  var isDark=html.getAttribute('data-theme')==='dark';
+  if(isDark){html.removeAttribute('data-theme');localStorage.setItem('cb-theme','light');}
+  else{html.setAttribute('data-theme','dark');localStorage.setItem('cb-theme','dark');}
+}
 </script>
 </body>
 </html>

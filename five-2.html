@@ -30,10 +30,21 @@ body{background:#14120f;color:#faf7f0;font-family:'Inter',sans-serif}
 .end-btn.alt{background:transparent;border:1.5px solid #d8d0bd;color:#2b2620}
 .end-logo{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;margin-top:40px;color:#6b6353}
 .end-logo span{color:#c9683f}
+
+.theme-btn{position:fixed;top:16px;right:16px;z-index:5;background:rgba(20,18,15,.55);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:7px 13px;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:#e8e2d4;cursor:pointer}
+.theme-btn:hover{border-color:#7bb8e0}
+html[data-theme="dark"] .beat-end{background:#14120f;color:#f3ecdd}
+html[data-theme="dark"] .end-line{color:#f3ecdd}
+html[data-theme="dark"] .end-btn.alt{border-color:#3a352c;color:#f3ecdd}
+html[data-theme="dark"] .end-logo{color:#a89f8c}
+html[data-theme="dark"] .theme-btn{background:rgba(243,236,221,.1);color:#f3ecdd}
 </style>
 
+<script>(function(){var t=localStorage.getItem('cb-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 </head>
 <body>
+
+<button class="theme-btn" onclick="toggleTheme()">◐ Theme</button>
 
 <div class="beat" style="background-image:url('bg-warming.jpg')">
   <div class="beat-overlay"></div>
@@ -100,5 +111,13 @@ body{background:#14120f;color:#faf7f0;font-family:'Inter',sans-serif}
   <div class="end-logo">Climate<span>Zero</span></div>
 </div>
 
+<script>
+function toggleTheme(){
+  var html=document.documentElement;
+  var isDark=html.getAttribute('data-theme')==='dark';
+  if(isDark){html.removeAttribute('data-theme');localStorage.setItem('cb-theme','light');}
+  else{html.setAttribute('data-theme','dark');localStorage.setItem('cb-theme','dark');}
+}
+</script>
 </body>
 </html>
