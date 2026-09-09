@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sources & Methodology | ClimateZero</title>
+<meta name="description" content="Where every figure on ClimateZero comes from, how the Climate Justice Gap index is built, and the full dataset available to download.">
+<meta name="author" content="ClimateZero">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://theclimatezero.github.io/methodology.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ClimateZero">
+<meta property="og:title" content="Sources & Methodology | ClimateZero">
+<meta property="og:description" content="Where every figure on ClimateZero comes from, and the full dataset available to download.">
+<meta property="og:url" content="https://theclimatezero.github.io/methodology.html">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<style>
+html[data-theme="dark"]{
+  --bg:#14120f;--surface:#1c1a16;--surface2:#242019;--line:rgba(255,255,255,.1);
+  --ink:#f3ecdd;--muted:#a89f8c;--sky:#5aa3d6;--sky-deep:#7bb8e0;--sky-light:#1c2a33;
+  --terracotta:#e08058;--sand:#e0b787;--moss:#8fb56a;--clay:#e0895a;
+}
+.theme-btn{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:7px 13px;font-family:var(--mono);font-size:.7rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px;margin-left:10px}
+.theme-btn:hover{border-color:var(--sky)}
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#faf7f0;--surface:#f3ecdd;--surface2:#ebe0c9;--line:rgba(43,38,32,.12);
+  --ink:#2b2620;--muted:#6b6353;--sky:#3f8dc4;--sky-deep:#296f9e;--sky-light:#eaf3f9;
+  --terracotta:#c9683f;--sand:#d9a86c;--moss:#6f8f52;--clay:#a8552f;
+  --serif:'Fraunces',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+a{color:inherit}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(250,247,240,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-logo{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);line-height:1.15}
+.nav-logo span{color:var(--sky-deep)}
+.nav-tagline{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.nav-links{display:flex;gap:20px;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.83rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--sky-deep)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:1px}
+.section{padding:70px 32px;max-width:1160px;margin:0 auto}
+.sec-eye{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sky-deep);margin-bottom:10px}
+.sec-title{font-family:var(--serif);font-size:clamp(1.9rem,4.5vw,3rem);font-weight:700;letter-spacing:-.02em;line-height:1.12;margin-bottom:14px;color:var(--ink)}
+.sec-sub{color:var(--muted);max-width:60ch;font-size:.96rem;line-height:1.7;margin-bottom:20px}
+.about-body{font-size:.94rem;color:var(--muted);line-height:1.8;margin-bottom:16px}
+.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:10px;margin-bottom:30px;background:var(--line);border-radius:10px;overflow:hidden}
+.mcard{background:var(--surface);padding:22px 20px}
+.mcard h4{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky-deep);margin-bottom:9px}
+.mcard p{font-size:.84rem;color:var(--muted);line-height:1.65}
+.mcard a{color:var(--sky-deep);text-decoration:none}
+.src-list{list-style:none;margin-top:14px}
+.src-list li{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.86rem}
+.src-list li:last-child{border-bottom:none}
+.src-list a{color:var(--sky-deep);text-decoration:none}
+.src-what{color:var(--muted);font-size:.8rem;text-align:right}
+.dl-box{background:var(--sky-light);border:1px solid #d7e8f3;border-radius:12px;padding:22px 24px;margin:26px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.dl-box h4{font-size:1rem;margin-bottom:4px}
+.dl-box p{font-size:.82rem;color:var(--muted)}
+.btn-p{background:var(--sky-deep);color:#fff;border:none;padding:13px 26px;border-radius:8px;font-family:var(--sans);font-size:.9rem;font-weight:600;cursor:pointer;transition:filter .2s,transform .15s;text-decoration:none;display:inline-block}
+.btn-p:hover{filter:brightness(1.08);transform:translateY(-1px)}
+@media(max-width:900px){.method-grid{grid-template-columns:1fr}}
+@media(max-width:640px){
+  nav{padding:12px 18px}
+  .nav-links{display:none}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:58px;left:0;right:0;background:var(--bg);padding:16px 20px;gap:14px;border-bottom:1px solid var(--line)}
+  .hamburger{display:flex}
+  .section{padding:52px 18px}
+  .src-list li{flex-direction:column;gap:4px}
+  .src-what{text-align:left}
+}
+.breadcrumb{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:6px;padding-top:96px}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--sky-deep)}
+.dateline{font-family:var(--mono);font-size:.66rem;color:var(--muted);margin-bottom:24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.dateline .dot{width:4px;height:4px;border-radius:50%;background:var(--muted)}
+.nav-logo-mark{width:28px;height:28px;border-radius:7px;margin-right:8px;vertical-align:middle;display:inline-block}
+.nav-logo-row{display:flex;align-items:center}
+footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 32px 30px}
+.footer-grid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px}
+.fbrand-name{font-family:var(--serif);font-size:1.3rem;font-weight:700;margin-bottom:4px}
+.fbrand-name span{color:var(--sky-deep)}
+.fbrand-tag{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.fbrand-sub{font-size:.8rem;color:var(--muted);line-height:1.65;max-width:28ch}
+.fcol h4{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.fcol ul{list-style:none}
+.fcol li{margin-bottom:8px}
+.fcol a{color:var(--muted);text-decoration:none;font-size:.8rem}
+.fcol a:hover{color:var(--sky-deep)}
+.footer-bottom{max-width:1160px;margin:0 auto;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.footer-bottom p{font-size:.7rem;color:var(--muted);font-family:var(--mono)}
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.footer-grid{grid-template-columns:1fr}}
+.skip-link{position:absolute;top:-100px;left:10px;background:var(--sky-deep);color:#fff;padding:10px 18px;border-radius:6px;font-family:var(--sans);font-size:.85rem;font-weight:600;text-decoration:none;z-index:999;transition:top .15s}
+.skip-link:focus{top:10px}
+</style>
+<script>(function(){var t=localStorage.getItem('cb-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav>
+  <div>
+    <a href="index.html" style="text-decoration:none"><div class="nav-logo-row"><img src="logo-192.png" alt="ClimateZero logo" class="nav-logo-mark"><div class="nav-logo">Climate<span>Zero</span></div></div></a>
+    <div class="nav-tagline">The data behind net zero.</div>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="explore.html">Explore</a></li>
+    <li><a href="countries.html">Countries</a></li>
+    <li><a href="justice-index.html">Justice Gap</a></li>
+    <li><a href="loss-and-damage.html">Loss &amp; Damage</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">◐ Theme</button>
+  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="section" id="main-content" tabindex="-1" style="padding-bottom:0">
+  <div class="breadcrumb"><a href="index.html">Home</a> / Sources &amp; Methodology</div>
+  <div class="dateline"><span>Updated September 2026</span></div>
+</div>
+<div class="section" style="padding-top:26px">
+  <div class="sec-eye">Transparency</div>
+  <h2 class="sec-title">Sources &amp; methodology.</h2>
+  <p class="sec-sub">Every figure published on ClimateZero traces back to a named, public source. This page lists where the core datasets come from, explains how the two original indices on this site are built, and links to the full dataset for anyone who wants to check the numbers themselves.</p>
+
+  <div class="sec-eye" style="margin-top:10px">Primary data sources</div>
+  <ul class="src-list">
+    <li><a href="https://ourworldindata.org/co2-and-greenhouse-gas-emissions" target="_blank">Our World in Data — CO2 &amp; GHG Emissions</a><span class="src-what">Annual and historical emissions, emissions share</span></li>
+    <li><a href="https://www.iea.org" target="_blank">International Energy Agency (IEA)</a><span class="src-what">Country energy mix, coal and oil dependency</span></li>
+    <li><a href="https://ember-climate.org/data/" target="_blank">Ember Global Electricity Review</a><span class="src-what">Renewable electricity share by country</span></li>
+    <li><a href="https://www.irena.org/Data" target="_blank">IRENA Renewable Capacity Statistics</a><span class="src-what">Global renewable capacity growth</span></li>
+    <li><a href="https://www.who.int/data/gho" target="_blank">World Health Organization, Global Health Observatory</a><span class="src-what">Ambient air pollution attributable deaths (indicator AIR_41, 2021 data)</span></li>
+    <li><a href="https://www.iqair.com/world-air-quality-report" target="_blank">IQAir World Air Quality Report 2025</a><span class="src-what">City and national PM2.5 concentrations</span></li>
+    <li><a href="https://www.ipcc.ch" target="_blank">Intergovernmental Panel on Climate Change (IPCC)</a><span class="src-what">Warming trends, scientific consensus figures</span></li>
+    <li><a href="https://unfccc.int" target="_blank">UNFCCC / Fund for Responding to Loss and Damage</a><span class="src-what">Loss and Damage Fund pledges and disbursement</span></li>
+    <li><a href="https://www.germanwatch.org/en/cri" target="_blank">Germanwatch Global Climate Risk Index</a><span class="src-what">Country vulnerability rankings</span></li>
+  </ul>
+
+  <div class="dl-box">
+    <div>
+      <h4>Full country dataset</h4>
+      <p>Every figure behind the map, country pages and Justice Gap index, in one CSV file.</p>
+    </div>
+    <a href="climatezero-country-data.csv" class="btn-p">Download CSV</a>
+  </div>
+
+  <div class="sec-eye" style="margin-top:36px">Original analysis on this site</div>
+  <h2 class="sec-title" style="font-size:1.6rem">Two things we built ourselves.</h2>
+  <div class="method-grid">
+    <div class="mcard">
+      <h4>The Climate Justice Gap index</h4>
+      <p>An original composite score, historical emissions share minus estimated GDP loss from climate impacts, ranking countries by the gap between contribution and consequence. Full formula and caveats on the <a href="justice-index.html">Justice Gap page</a>.</p>
+    </div>
+    <div class="mcard">
+      <h4>The Loss &amp; Damage tracker</h4>
+      <p>A compiled, cross-referenced record of what has been pledged, transferred and disbursed through the UN Loss and Damage Fund, drawn from independent financial and climate journalism rather than a single press release. See the <a href="loss-and-damage.html">tracker page</a>.</p>
+    </div>
+  </div>
+
+  <div class="sec-eye" style="margin-top:36px">Our standard</div>
+  <h2 class="sec-title" style="font-size:1.6rem">What we do, and do not, publish.</h2>
+  <p class="about-body">Every number on this site is sourced from a named organisation, with a link to that source shown alongside it wherever it appears. Where figures from different sources conflict, we show the range rather than picking a single number to look tidy. Where we could not find a reliable figure for a particular country or statistic, that gap is shown honestly as "no data published" rather than filled in with an estimate. This matters more to us than having a complete-looking table: a site that quietly invents numbers to avoid gaps is not one anyone should trust, least of all on a subject where the stakes are this high.</p>
+  <p class="about-body">If you spot a figure that looks wrong, out of date, or a source that has updated, <a href="about.html" style="color:var(--sky-deep)">get in touch</a> and we will correct it.</p>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="fbrand-name">Climate<span>Zero</span></div>
+      <div class="fbrand-tag">The data behind net zero.</div>
+      <p class="fbrand-sub">Tracking who contributes to climate change, who bears the costs, and how the world is responding.</p>
+    </div>
+    <div class="fcol"><h4>Tools</h4><ul><li><a href="explore.html">World map</a></li><li><a href="justice-index.html">Justice Gap index</a></li><li><a href="loss-and-damage.html">Loss &amp; Damage tracker</a></li><li><a href="compare.html">Compare countries</a></li></ul></div>
+    <div class="fcol"><h4>Data</h4><ul><li><a href="methodology.html">Sources &amp; methodology</a></li><li><a href="climatezero-country-data.csv">Download dataset (CSV)</a></li><li><a href="https://ourworldindata.org" target="_blank">Our World in Data</a></li></ul></div>
+    <div class="fcol"><h4>About</h4><ul><li><a href="about.html">Our story</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="mailto:theclimatebill@gmail.com">theclimatebill@gmail.com</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>2026 ClimateZero · All data from official government and international agency records</p>
+  </div>
+</footer>
+
+<script>
+function toggleTheme(){
+  var html=document.documentElement;
+  var isDark=html.getAttribute('data-theme')==='dark';
+  if(isDark){html.removeAttribute('data-theme');localStorage.setItem('cb-theme','light');}
+  else{html.setAttribute('data-theme','dark');localStorage.setItem('cb-theme','dark');}
+}
+</script>
+</body>
+</html>
