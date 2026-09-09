@@ -93,6 +93,13 @@ html[data-theme="dark"] .detail-cell{background:#242019}
 html[data-theme="dark"] .detail-cell .dv{color:#f3ecdd}
 html[data-theme="dark"] .theme-btn{background:#1c1a16;border-color:#3a352c;color:#a89f8c}
 
+.globe-toggle-btn{position:absolute;top:14px;left:14px;z-index:15;background:#fff;border:0.5px solid #ccc;border-radius:20px;padding:8px 14px;font-size:12.5px;color:#333;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.globe-toggle-btn:hover{border-color:#999}
+html[data-theme="dark"] .globe-toggle-btn{background:#1c1a16;border-color:#3a352c;color:#f3ecdd}
+#globe-wrap{position:absolute;inset:0;display:none;background:#05070d}
+#globe-wrap.active{display:block}
+#globe-wrap .globe-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#889;font-family:monospace;font-size:13px}
+
 @media(max-width:640px){
   .hero{padding:1.1rem 1rem 0.8rem}
   .hero h1{font-size:19px}
@@ -125,7 +132,9 @@ html[data-theme="dark"] .theme-btn{background:#1c1a16;border-color:#3a352c;color
   </div>
 
   <div id="map-svg-wrap">
+    <button id="globe-toggle" class="globe-toggle-btn" onclick="toggleGlobeView()">🌐 3D Globe</button>
     <svg id="map-svg" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet"></svg>
+    <div id="globe-wrap"></div>
     <div class="tooltip" id="tooltip">
       <div class="t-name" id="t-name"></div>
       <div class="t-val" id="t-val"></div>
@@ -148,6 +157,7 @@ html[data-theme="dark"] .theme-btn{background:#1c1a16;border-color:#3a352c;color
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/globe.gl"></script>
 <script>
 const EMISSIONS = {
   "CHN":12000,"USA":4900,"IND":2800,"RUS":1800,"JPN":1050,"DEU":620,"KOR":600,
@@ -243,6 +253,87 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
         document.getElementById("t-val").textContent = Math.round(EMISSIONS[iso]).toLocaleString()+" Mt CO₂ (2023)";
       });
   });
+
+// --- 3D globe view -------------------------------------------------
+// A toggleable alternative to the flat map, built on the same real
+// EMISSIONS/COUNTRY_STATS data and the same TopoJSON country shapes —
+// nothing about the underlying data changes, only how it's viewed.
+let globeInstance = null;
+let globeInitPromise = null;
+const globeWrap = document.getElementById("globe-wrap");
+const globeToggleBtn = document.getElementById("globe-toggle");
+let globeActive = false;
+
+function initGlobe() {
+  if (globeInitPromise) return globeInitPromise;
+  globeWrap.innerHTML = '<div class="globe-loading">Loading globe…</div>';
+  globeInitPromise = fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
+    .then(r => r.json())
+    .then(world => {
+      const countries = topojson.feature(world, world.objects.countries);
+      globeWrap.innerHTML = "";
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      globeInstance = window.Globe()(globeWrap)
+        .globeImageUrl(null)
+        .backgroundColor("rgba(0,0,0,0)")
+        .showAtmosphere(true)
+        .atmosphereColor(isDark ? "#7fa8ff" : "#8fb8ff")
+        .atmosphereAltitude(0.18)
+        .polygonsData(countries.features)
+        .polygonAltitude(0.006)
+        .polygonCapColor(d => {
+          const iso = ISO_N2A[String(d.id).padStart(3, "0")];
+          return EMISSIONS[iso] ? colorScale(EMISSIONS[iso]) : (isDark ? "#3a352c" : "#e4e2dc");
+        })
+        .polygonSideColor(() => isDark ? "rgba(60,55,45,0.4)" : "rgba(180,175,160,0.3)")
+        .polygonStrokeColor(() => isDark ? "#12100c" : "#ffffff")
+        .polygonLabel(d => {
+          const iso = ISO_N2A[String(d.id).padStart(3, "0")];
+          if (!iso || !EMISSIONS[iso]) return "";
+          return `<div style="background:#fff;color:#222;padding:6px 10px;border-radius:6px;font-size:12.5px;font-family:inherit">
+            <b>${ISO_NAMES[iso] || iso}</b><br>${Math.round(EMISSIONS[iso]).toLocaleString()} Mt CO₂ (2023)</div>`;
+        })
+        .onPolygonClick(d => {
+          const iso = ISO_N2A[String(d.id).padStart(3, "0")] || "";
+          showDetail(iso);
+        })
+        .onPolygonHover(d => {
+          globeWrap.style.cursor = d ? "pointer" : "grab";
+        });
+
+      globeInstance.pointOfView({ altitude: 2.2 }, 0);
+      const controls = globeInstance.controls();
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.35;
+      controls.enableZoom = true;
+      globeWrap.addEventListener("pointerdown", () => { controls.autoRotate = false; }, { once: true });
+
+      function sizeGlobe() {
+        const r = mapWrap.getBoundingClientRect();
+        globeInstance.width(r.width).height(r.height);
+      }
+      sizeGlobe();
+      window.addEventListener("resize", sizeGlobe, { passive: true });
+    })
+    .catch(() => {
+      globeWrap.innerHTML = '<div class="globe-loading">Couldn\'t load the 3D globe. Try the flat map instead.</div>';
+    });
+  return globeInitPromise;
+}
+
+function toggleGlobeView() {
+  globeActive = !globeActive;
+  if (globeActive) {
+    globeWrap.classList.add("active");
+    document.getElementById("map-svg").style.display = "none";
+    globeToggleBtn.textContent = "🗺️ Flat map";
+    initGlobe();
+  } else {
+    globeWrap.classList.remove("active");
+    document.getElementById("map-svg").style.display = "";
+    globeToggleBtn.textContent = "🌐 3D Globe";
+  }
+}
 
 const detailPanel = document.getElementById("detail-panel");
 const detailBody = document.getElementById("detail-body");
