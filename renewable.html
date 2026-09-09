@@ -35,6 +35,10 @@ html[data-theme="dark"] .fav-btn svg{stroke:var(--ink)}
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 :root{
+  /* Shared spacing scale, so every section and gap steps through the same
+     rhythm rather than being set ad hoc per element. */
+  --sp-1:8px;--sp-2:16px;--sp-3:24px;--sp-4:40px;--sp-5:64px;--sp-6:96px;
+
   --bg:#faf7f0;--surface:#f3ecdd;--surface2:#ebe0c9;--line:rgba(43,38,32,.12);
   --ink:#2b2620;--muted:#6b6353;--sky:#3f8dc4;--sky-deep:#296f9e;--sky-light:#eaf3f9;
   --terracotta:#c9683f;--sand:#d9a86c;--moss:#6f8f52;--clay:#a8552f;
@@ -54,8 +58,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .nav-links a:hover{color:var(--sky-deep)}
 .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
 .hamburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:1px}
-.section{padding:70px 32px;max-width:1160px;margin:0 auto}
-.full-section{padding:70px 32px}
+.section{padding:var(--sp-6) 32px;max-width:1160px;margin:0 auto}
+.full-section{padding:var(--sp-6) 32px}
 .full-section .inner{max-width:1160px;margin:0 auto}
 .sec-eye{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sky-deep);margin-bottom:10px}
 .sec-title{font-family:var(--serif);font-size:clamp(1.9rem,4.5vw,3rem);font-weight:700;letter-spacing:-.02em;line-height:1.12;margin-bottom:14px;color:var(--ink)}
@@ -72,7 +76,8 @@ hr.div{border:none;border-top:1px solid var(--line);max-width:1160px;margin:0 au
 .fact-txt{font-size:.8rem;color:var(--muted);line-height:1.55}
 .fact-txt a{color:var(--sky-deep);text-decoration:none}
 .chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:30px}
-.chart-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 20px}
+.chart-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 20px;transition:transform .18s,box-shadow .18s,border-color .18s}
+.chart-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(43,38,32,.08);border-color:var(--sky)}
 .chart-title{font-weight:600;font-size:.92rem;margin-bottom:2px}
 .chart-sub{font-family:var(--mono);font-size:.66rem;color:var(--muted);margin-bottom:16px}
 .chart-src{font-family:var(--mono);font-size:.64rem;color:var(--muted);margin-top:12px}
@@ -288,7 +293,9 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 }
 
 .photo-card{position:relative;overflow:hidden;border-radius:12px;aspect-ratio:16/7;margin:24px 0}
-.photo-card img{width:100%;height:100%;object-fit:cover}
+.photo-card img{width:100%;height:100%;object-fit:cover;filter:grayscale(.55) contrast(1.08) brightness(.95)}
+.photo-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(41,111,158,.38),rgba(168,85,47,.32));mix-blend-mode:color;pointer-events:none;z-index:1}
+html[data-theme="dark"] .photo-card::before{background:linear-gradient(135deg,rgba(123,184,224,.3),rgba(224,137,90,.28))}
 .photo-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(20,20,18,.85) 0%,transparent 100%);padding:20px 18px 14px;font-size:.8rem;color:#f3ecdd}
 .photo-caption .cap-tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#f0c896;display:block;margin-bottom:3px}
 
@@ -332,6 +339,34 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
 @keyframes skeleton-pulse{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .map-loading{display:flex;align-items:center;justify-content:center;height:400px;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 .chart-loading{height:190px}
+
+/* Pull quote: a large, editorial callout pulled from the surrounding
+   copy, set in the serif display face so long-form sections don't read
+   as a flat wall of body text. */
+.pull-quote{font-family:var(--serif);font-size:clamp(1.35rem,2.6vw,1.85rem);font-weight:600;font-style:italic;line-height:1.45;color:var(--ink);max-width:56ch;margin:30px 0;padding-left:24px;border-left:3px solid var(--clay)}
+.pull-quote cite{display:block;font-family:var(--mono);font-style:normal;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:12px}
+
+/* Scroll-reveal: a small fade-and-rise applied via IntersectionObserver
+   (see script below), off by default so content is never hidden if JS
+   fails, and skipped entirely for reduced-motion users. */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in-view{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* Chart annotation: a small callout marker for pointing at the single
+   most important value on a bar/track rather than leaving the reader to
+   find it themselves. */
+.chart-annotation{position:relative;display:inline-block}
+.annotation-flag{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:.62rem;letter-spacing:.04em;padding:4px 9px;border-radius:5px;white-space:nowrap}
+.annotation-flag::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--ink)}
+html[data-theme="dark"] .annotation-flag{background:var(--sky-deep);color:#fff}
+html[data-theme="dark"] .annotation-flag::after{border-top-color:var(--sky-deep)}
+
+/* Masthead strip: a compact "published / sources" line used near the top
+   of long-form pages so each page reads as a dated, sourced piece rather
+   than a static file. */
+.masthead-strip{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:8px}
+.masthead-strip .dot{width:4px;height:4px;border-radius:50%;background:var(--muted)}
 </style>
 
 <script>(function(){var t=localStorage.getItem('cb-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
@@ -407,12 +442,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
 </nav>
 
 
-<div class="section" id="main-content" tabindex="-1" style="padding-bottom:0;max-width:1160px">
+<div class="section reveal" id="main-content" tabindex="-1" style="padding-bottom:0;max-width:1160px">
   <div class="breadcrumb"><a href="index.html">Home</a> / Renewable Energy</div>
   <div class="dateline"><span>Updated July 2026</span><span class="dot"></span><span>18 countries tracked</span><span class="dot"></span>
       </div>
 </div>
-<div class="section">
+<div class="section reveal">
   <div class="chapter">What is being done</div>
   <div class="sec-eye">How the world is responding</div>
   <h2 class="sec-title">The clean energy race.</h2>
@@ -543,6 +578,23 @@ function toggleTheme(){
   if(isDark){html.removeAttribute('data-theme');localStorage.setItem('cb-theme','light');}
   else{html.setAttribute('data-theme','dark');localStorage.setItem('cb-theme','dark');}
 }
+</script>
+
+<script>
+// Reveal-on-scroll: sections fade and rise into place the first time
+// they cross into view. Content stays fully visible with no JS or with
+// prefers-reduced-motion, this is presentational only.
+(function(){
+  var targets = document.querySelectorAll('.reveal');
+  if (!targets.length) return;
+  if (!('IntersectionObserver' in window)) { targets.forEach(function(el){ el.classList.add('in-view'); }); return; }
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) { entry.target.classList.add('in-view'); obs.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12 });
+  targets.forEach(function(el){ obs.observe(el); });
+})();
 </script>
 </body>
 </html>
