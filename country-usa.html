@@ -233,7 +233,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:30px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px 24px;text-decoration:none;color:var(--ink);display:block;transition:transform .18s,box-shadow .18s,border-color .18s;position:relative;overflow:hidden}
 .card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(43,38,32,.08);border-color:var(--sky)}
-.card-icon{font-size:1.8rem;margin-bottom:14px;display:block}
+.card-icon{font-size:1.8rem;margin-bottom:14px;display:block;color:var(--sky-deep)}
 .card-title{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .card-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:14px}
 .card-cta{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sky-deep);display:flex;align-items:center;gap:6px}
@@ -274,7 +274,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 
 .topic-block{margin:34px 0}
 .topic-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.topic-icon{font-size:1.3rem}
+.topic-icon{font-size:1.3rem;color:var(--sky-deep);display:inline-flex}
 .topic-title{font-family:var(--serif);font-size:1.3rem;font-weight:700}
 .fact-list{list-style:none}
 .fact-list li{position:relative;padding-left:22px;margin-bottom:12px;font-size:.9rem;line-height:1.65}
@@ -347,7 +347,7 @@ html[data-theme="dark"] .cp-cell{background:#242019}
 
   
   <div class="topic-block">
-    <div class="topic-head"><span class="topic-icon">🌡️</span><span class="topic-title">Rising temperatures</span></div>
+    <div class="topic-head"><span class="topic-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15.5V4.5a2 2 0 1 0-4 0v11a4 4 0 1 0 4 0Z"/><path d="M12 8h-2"/></svg></span><span class="topic-title">Rising temperatures</span></div>
     <ul class="fact-list">
       <li>March 2026 was the <strong>warmest March in the 132 year US national record</strong>, part of a decade in which record highs have consistently outpaced record lows.
         <span class="fact-src">Source: NOAA National Centers for Environmental Information</span></li>
@@ -359,7 +359,7 @@ html[data-theme="dark"] .cp-cell{background:#242019}
   </div>
 
   <div class="topic-block">
-    <div class="topic-head"><span class="topic-icon">🦋</span><span class="topic-title">Wildlife under pressure</span></div>
+    <div class="topic-head"><span class="topic-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M12 8c1-3 4-5 6.5-4S22 8 19.5 11 13 13 12 11"/><path d="M12 8c-1-3-4-5-6.5-4S1.5 8 4 11 11 13 12 11"/><path d="M12 13c1 3 4 5 6 4s2-4 0-6-5-1-6 2"/><path d="M12 13c-1 3-4 5-6 4s-2-4 0-6 5-1 6 2"/></svg></span><span class="topic-title">Wildlife under pressure</span></div>
     <ul class="fact-list">
       <li>More than <strong>one third of America's fish and wildlife species are at risk of extinction</strong> in the coming decades. Over 1,600 species are already listed under the Endangered Species Act, with state agencies identifying 12,000 more that need help.
         <span class="fact-src">Source: <a href="https://www.nature.org/en-us/about-us/who-we-are/how-we-work/policy/environmental-issues-guide/" target="_blank">The Nature Conservancy</a></span></li>
@@ -371,7 +371,7 @@ html[data-theme="dark"] .cp-cell{background:#242019}
   </div>
 
   <div class="topic-block">
-    <div class="topic-head"><span class="topic-icon">🌊</span><span class="topic-title">Floods, fires and displacement</span></div>
+    <div class="topic-head"><span class="topic-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9c1.8-1.6 3.6-1.6 5.4 0s3.6 1.6 5.4 0 3.6-1.6 5.4 0 3.6 1.6 5.4 0"/><path d="M2 15c1.8-1.6 3.6-1.6 5.4 0s3.6 1.6 5.4 0 3.6-1.6 5.4 0 3.6 1.6 5.4 0"/></svg></span><span class="topic-title">Floods, fires and displacement</span></div>
     <ul class="fact-list">
       <li>The January 2025 Los Angeles wildfires became the costliest disaster of that year, striking while major hurricanes had already devastated communities from Florida to North Carolina months earlier.
         <span class="fact-src">Source: <a href="https://www.npr.org/2025/01/21/nx-s1-5266207/trump-paris-agreement-biden-climate-change" target="_blank">NPR</a></span></li>
@@ -381,7 +381,7 @@ html[data-theme="dark"] .cp-cell{background:#242019}
   </div>
 
   <div class="topic-block">
-    <div class="topic-head"><span class="topic-icon">🏛️</span><span class="topic-title">What the government is doing</span></div>
+    <div class="topic-head"><span class="topic-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9 12 4l9 5"/><path d="M4 9h16M5 9v9M9 9v9M15 9v9M19 9v9M3 20h18"/></svg></span><span class="topic-title">What the government is doing</span></div>
     <div class="gov-card">
       <div class="gov-card-title">Withdrawal from the Paris Agreement, again</div>
       <div class="gov-card-body">In January 2025 the US formally began withdrawing from the Paris Agreement for a second time. Around half of Americans opposed the move in polling at the time, with only about one in five adults strongly or somewhat in favour.</div>

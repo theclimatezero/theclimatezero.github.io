@@ -233,7 +233,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:30px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px 24px;text-decoration:none;color:var(--ink);display:block;transition:transform .18s,box-shadow .18s,border-color .18s;position:relative;overflow:hidden}
 .card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(43,38,32,.08);border-color:var(--sky)}
-.card-icon{font-size:1.8rem;margin-bottom:14px;display:block}
+.card-icon{font-size:1.8rem;margin-bottom:14px;display:block;color:var(--sky-deep)}
 .card-title{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .card-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:14px}
 .card-cta{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sky-deep);display:flex;align-items:center;gap:6px}
@@ -276,7 +276,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 .data-gap-note{background:var(--sky-light);border-left:3px solid var(--sky);padding:16px 18px;border-radius:0 8px 8px 0;font-size:.85rem;line-height:1.65;margin:24px 0}
 .topic-block{margin:34px 0}
 .topic-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.topic-icon{font-size:1.3rem}
+.topic-icon{font-size:1.3rem;color:var(--sky-deep);display:inline-flex}
 .topic-title{font-family:var(--serif);font-size:1.3rem;font-weight:700}
 .fact-list{list-style:none}
 .fact-list li{position:relative;padding-left:22px;margin-bottom:12px;font-size:.9rem;line-height:1.65}
@@ -348,7 +348,7 @@ html[data-theme="dark"] .cp-cell{background:#242019}
   </div>
 
   <div class="topic-block">
-    <div class="topic-head"><span class="topic-icon">🌡️</span><span class="topic-title">Rising temperatures</span></div>
+    <div class="topic-head"><span class="topic-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15.5V4.5a2 2 0 1 0-4 0v11a4 4 0 1 0 4 0Z"/><path d="M12 8h-2"/></svg></span><span class="topic-title">Rising temperatures</span></div>
     <ul class="fact-list">
       <li>India's annual mean temperature has risen by approximately <strong>0.9°C between 1901 and 2024</strong>, with warming accelerating sharply since the 1990s.
         <span class="fact-src">Source: <a href="https://www.dataforindia.com/temperature-trends-in-india/" target="_blank">Data For India, IMD records</a></span></li>
@@ -360,7 +360,7 @@ html[data-theme="dark"] .cp-cell{background:#242019}
   </div>
 
   <div class="topic-block">
-    <div class="topic-head"><span class="topic-icon">🦋</span><span class="topic-title">Wildlife under pressure</span></div>
+    <div class="topic-head"><span class="topic-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M12 8c1-3 4-5 6.5-4S22 8 19.5 11 13 13 12 11"/><path d="M12 8c-1-3-4-5-6.5-4S1.5 8 4 11 11 13 12 11"/><path d="M12 13c1 3 4 5 6 4s2-4 0-6-5-1-6 2"/><path d="M12 13c-1 3-4 5-6 4s-2-4 0-6 5-1 6 2"/></svg></span><span class="topic-title">Wildlife under pressure</span></div>
     <ul class="fact-list">
       <li>India added <strong>13 animal and 13 plant species</strong> as Critically Endangered in the IUCN's October 2025 update alone, following 8 animal and 7 plant species added in 2024.
         <span class="fact-src">Source: <a href="https://en.wikipedia.org/wiki/List_of_endangered_animals_in_India" target="_blank">IUCN Red List</a></span></li>
@@ -374,7 +374,7 @@ html[data-theme="dark"] .cp-cell{background:#242019}
   </div>
 
   <div class="topic-block">
-    <div class="topic-head"><span class="topic-icon">🌊</span><span class="topic-title">Floods and displacement</span></div>
+    <div class="topic-head"><span class="topic-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9c1.8-1.6 3.6-1.6 5.4 0s3.6 1.6 5.4 0 3.6-1.6 5.4 0 3.6 1.6 5.4 0"/><path d="M2 15c1.8-1.6 3.6-1.6 5.4 0s3.6 1.6 5.4 0 3.6-1.6 5.4 0 3.6 1.6 5.4 0"/></svg></span><span class="topic-title">Floods and displacement</span></div>
     <ul class="fact-list">
       <li>Between 2015 and 2024, <strong>32.32 million people</strong> were internally displaced within India by disasters, mostly floods and storms.
         <span class="fact-src">Source: <a href="https://www.internal-displacement.org/countries/india/" target="_blank">Internal Displacement Monitoring Centre</a></span></li>
@@ -390,7 +390,7 @@ html[data-theme="dark"] .cp-cell{background:#242019}
   </div>
 
   <div class="topic-block">
-    <div class="topic-head"><span class="topic-icon">🏛️</span><span class="topic-title">What the government is doing</span></div>
+    <div class="topic-head"><span class="topic-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9 12 4l9 5"/><path d="M4 9h16M5 9v9M9 9v9M15 9v9M19 9v9M3 20h18"/></svg></span><span class="topic-title">What the government is doing</span></div>
     <div class="gov-card">
       <div class="gov-card-title">Renewable energy targets, repeatedly raised</div>
       <div class="gov-card-body">India's original 2015 target of 40% non fossil power capacity by 2030 was met nine years early. The revised target rose to 50% by 2030, and in March 2026 India set a new goal of 60% non fossil capacity by 2035. As of February 2026, non fossil sources already supply 52.57% of installed capacity.</div>

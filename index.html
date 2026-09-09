@@ -39,6 +39,9 @@ html[data-theme="dark"] .fav-btn svg{stroke:var(--ink)}
   --ink:#2b2620;--muted:#6b6353;--sky:#3f8dc4;--sky-deep:#296f9e;--sky-light:#eaf3f9;
   --terracotta:#c9683f;--sand:#d9a86c;--moss:#6f8f52;--clay:#a8552f;
   --serif:'Fraunces',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;
+  /* Shared spacing scale, so every section and gap steps through the same
+     rhythm rather than being set ad hoc per element. */
+  --sp-1:8px;--sp-2:16px;--sp-3:24px;--sp-4:40px;--sp-5:64px;--sp-6:96px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -54,8 +57,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .nav-links a:hover{color:var(--sky-deep)}
 .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
 .hamburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:1px}
-.section{padding:70px 32px;max-width:1160px;margin:0 auto}
-.full-section{padding:70px 32px}
+.section{padding:var(--sp-6) 32px;max-width:1160px;margin:0 auto}
+.full-section{padding:var(--sp-6) 32px}
 .full-section .inner{max-width:1160px;margin:0 auto}
 .sec-eye{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sky-deep);margin-bottom:10px}
 .sec-title{font-family:var(--serif);font-size:clamp(1.9rem,4.5vw,3rem);font-weight:700;letter-spacing:-.02em;line-height:1.12;margin-bottom:14px;color:var(--ink)}
@@ -72,7 +75,8 @@ hr.div{border:none;border-top:1px solid var(--line);max-width:1160px;margin:0 au
 .fact-txt{font-size:.8rem;color:var(--muted);line-height:1.55}
 .fact-txt a{color:var(--sky-deep);text-decoration:none}
 .chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:30px}
-.chart-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 20px}
+.chart-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 20px;transition:transform .18s,box-shadow .18s,border-color .18s}
+.chart-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(43,38,32,.08);border-color:var(--sky)}
 .chart-title{font-weight:600;font-size:.92rem;margin-bottom:2px}
 .chart-sub{font-family:var(--mono);font-size:.66rem;color:var(--muted);margin-bottom:16px}
 .chart-src{font-family:var(--mono);font-size:.64rem;color:var(--muted);margin-top:12px}
@@ -258,7 +262,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:30px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px 24px;text-decoration:none;color:var(--ink);display:block;transition:transform .18s,box-shadow .18s,border-color .18s;position:relative;overflow:hidden}
 .card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(43,38,32,.08);border-color:var(--sky)}
-.card-icon{font-size:1.8rem;margin-bottom:14px;display:block}
+.card-icon{font-size:1.8rem;margin-bottom:14px;display:block;color:var(--sky-deep)}
 .card-title{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .card-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:14px}
 .card-cta{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sky-deep);display:flex;align-items:center;gap:6px}
@@ -296,6 +300,42 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 .photo-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(20,20,18,.85) 0%,transparent 100%);padding:18px 14px 12px;font-size:.74rem;color:#f3ecdd}
 .photo-caption .cap-tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#f0c896;display:block;margin-bottom:3px}
 
+/* Consistent duotone treatment so every photo on the site reads as one
+   family rather than random, differently-lit stock shots. Desaturate the
+   image itself, then lay a brand-colour gradient over it with a blend
+   mode so warm/cool tone stays consistent across every photo. */
+.photo-card img{filter:grayscale(.55) contrast(1.08) brightness(.95)}
+.photo-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(41,111,158,.38),rgba(168,85,47,.32));mix-blend-mode:color;pointer-events:none;z-index:1}
+html[data-theme="dark"] .photo-card::before{background:linear-gradient(135deg,rgba(123,184,224,.3),rgba(224,137,90,.28))}
+
+/* Pull quote: a large, editorial callout pulled from the surrounding
+   copy, set in the serif display face so long-form sections don't read
+   as a flat wall of body text. */
+.pull-quote{font-family:var(--serif);font-size:clamp(1.35rem,2.6vw,1.85rem);font-weight:600;font-style:italic;line-height:1.45;color:var(--ink);max-width:56ch;margin:30px 0;padding-left:24px;border-left:3px solid var(--clay)}
+.pull-quote cite{display:block;font-family:var(--mono);font-style:normal;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:12px}
+
+/* Scroll-reveal: a small fade-and-rise applied via IntersectionObserver
+   (see script below), off by default so content is never hidden if JS
+   fails, and skipped entirely for reduced-motion users. */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in-view{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* Chart annotation: a small callout marker for pointing at the single
+   most important value on a bar/track rather than leaving the reader to
+   find it themselves. */
+.chart-annotation{position:relative;display:inline-block}
+.annotation-flag{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:.62rem;letter-spacing:.04em;padding:4px 9px;border-radius:5px;white-space:nowrap}
+.annotation-flag::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--ink)}
+html[data-theme="dark"] .annotation-flag{background:var(--sky-deep);color:#fff}
+html[data-theme="dark"] .annotation-flag::after{border-top-color:var(--sky-deep)}
+
+/* Masthead strip: a compact "published / sources" line used near the top
+   of long-form pages so each page reads as a dated, sourced piece rather
+   than a static file. */
+.masthead-strip{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:8px}
+.masthead-strip .dot{width:4px;height:4px;border-radius:50%;background:var(--muted)}
+
 .live-ticker{background:var(--surface2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 32px;text-align:center}
 .live-ticker-num{font-family:var(--serif);font-weight:900;font-size:1.9rem;color:var(--clay);letter-spacing:-.02em}
 .live-ticker-lab{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
@@ -327,7 +367,7 @@ html[data-theme="dark"] .kf-box{background:#1c2a33;border-color:#2a3d47}
 .related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
 .rel-card{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:18px 20px;text-decoration:none;color:var(--ink);display:block;transition:border-color .15s,transform .15s}
 .rel-card:hover{border-color:var(--sky);transform:translateY(-2px)}
-.rel-icon{font-size:1.3rem;margin-bottom:8px;display:block}
+.rel-icon{font-size:1.3rem;margin-bottom:8px;display:block;color:var(--sky-deep)}
 .rel-title{font-weight:600;font-size:.9rem;margin-bottom:4px}
 .rel-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
 @media print{
@@ -440,6 +480,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
 <div class="hero-hub" id="main-content" tabindex="-1">
   <div class="hero-hub-bg"></div>
   <div class="hero-hub-inner">
+    <div class="masthead-strip" style="justify-content:center"><span>Independent, non-commercial data project</span><span class="dot"></span><span>Updated September 2026</span><span class="dot"></span><span>Sources: NASA, NOAA, IPCC, IEA, World Bank</span></div>
     <div class="hub-eyebrow">Global climate data and accountability</div>
     <h1 class="hub-h1">Track the path to <em>zero.</em></h1>
     <p class="hub-sub">Who caused the climate crisis. Who is paying for it. Who is doing something about it. All the numbers here come from trusted sources like NASA and the World Bank.</p>
@@ -475,17 +516,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   <div class="live-ticker-lab">Tonnes of CO2 emitted worldwide since you opened this page</div>
 </div>
 
-<div class="section" style="padding-bottom:0">
+<div class="section reveal" style="padding-bottom:0">
   <div class="clock-widget" id="clockWidget">
     <div class="clock-eyebrow">Remaining global carbon budget, 1.5°C</div>
     <div class="clock-digits" id="clockDigits"></div>
-    <div class="clock-bar"><div class="clock-bar-fill" id="clockBar" style="width:0%"></div></div>
+    <div class="chart-annotation" style="display:block">
+      <div class="annotation-flag" id="clockFlag" style="left:0%">Budget used</div>
+      <div class="clock-bar"><div class="clock-bar-fill" id="clockBar" style="width:0%"></div></div>
+    </div>
     <div class="clock-sub">At current emission rates, the remaining budget runs out around <strong id="clockDate">—</strong>.</div>
     <div class="clock-src">Source: <a href="https://www.ipcc.ch/report/ar6/wg1/" target="_blank">IPCC AR6 WG1</a>, remaining budget for 50% chance of &lt;1.5°C from Jan 2020: 500 GtCO2, depleted at this site's published rate of ~36.8 GtCO2/year. <a href="methodology.html" style="color:#7bb8e0">Full methodology</a></div>
   </div>
 </div>
 
-<div class="section" style="padding-bottom:20px">
+<div class="section reveal" style="padding-bottom:20px">
   <div class="sec-eye">Latest headlines</div>
   <h2 class="sec-title">The warming is not necessarily permanent, if action follows.</h2>
   <p class="sec-sub" style="margin-bottom:30px">In September 2026, the UN said passing 1.5°C now looks likely, but not final. Temperatures could still be brought back down later this century if emissions fall fast and carbon removal scales up. Some damage already locked in will not reverse either way. Here is where that story, and a few others, currently stand.</p>
@@ -503,9 +547,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
       <div class="chart-src"><a href="https://news.un.org/en/story/2026/09/1168240" target="_blank" rel="noopener">Read at UN News →</a></div>
     </div>
   </div>
+  <blockquote class="pull-quote reveal">"Ice sheet loss and Amazon degradation become irreversible the longer temperatures stay above 1.5°C."<cite>António Guterres, UN Secretary-General · UN News, 2 September 2026</cite></blockquote>
 </div>
 
-<div class="section" style="padding-bottom:0">
+<div class="section reveal" style="padding-bottom:0">
   <div class="sec-eye">What is actually happening</div>
   <h2 class="sec-title">Colour is disappearing from the world, in ways you can measure.</h2>
   <p class="sec-sub" style="margin-bottom:24px">Smoke greys out skies that were blue. Bleaching turns living reef white and grey where colour used to be. Drought drains green land to dust. None of this is a metaphor, it shows up in the data below, place by place, year by year.</p>
@@ -525,31 +570,31 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   </div>
 </div>
 
-<div class="section">
+<div class="section reveal">
   <div class="sec-eye">The data</div>
   
   <div class="card-grid">
     <a href="explore.html" class="card">
-      <span class="card-icon">🗺️</span>
+      <span class="card-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg></span>
       <div class="card-title">Emissions by country</div>
       <div class="card-desc">Annual, historical since 1850, and per person CO2 for every country, on one interactive map.</div>
     </a>
     <a href="impact.html" class="card">
-      <span class="card-icon">🌡️</span>
+      <span class="card-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15.5V4.5a2 2 0 1 0-4 0v11a4 4 0 1 0 4 0Z"/><path d="M12 8h-2"/></svg></span>
       <div class="card-title">Impact data</div>
       <div class="card-desc">Heat mortality, health, migration, wildlife decline and disaster losses, each with its source.</div>
     </a>
     <a href="renewable.html" class="card">
-      <span class="card-icon">☀️</span>
+      <span class="card-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></span>
       <div class="card-title">Renewable energy</div>
       <div class="card-desc">Electricity generation mix and capacity growth by country, and what the numbers do not capture.</div>
     </a>
     <a href="compare.html" class="card">
-      <span class="card-icon">⚖️</span>
+      <span class="card-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M8 21h8M4 7h6M14 7h6"/><path d="M4 7 1.5 12.5a3 3 0 0 0 5 0L4 7ZM20 7l-2.5 5.5a3 3 0 0 0 5 0L20 7Z"/></svg></span>
       <div class="card-title">Country comparison</div>
       <div class="card-desc">Any two nations, side by side, on emissions, history, population and economic loss.</div>
     </a><a href="about.html" class="card">
-      <span class="card-icon">📖</span>
+      <span class="card-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5.5c-1.6-1-4-1.5-6.5-1.5v14.5c2.5 0 4.9.5 6.5 1.5 1.6-1 4-1.5 6.5-1.5V4c-2.5 0-4.9.5-6.5 1.5Z"/><path d="M12 5.5v14"/></svg></span>
       <div class="card-title">About</div>
       <div class="card-desc">The story and sources behind this project.</div>
     </a>
@@ -633,7 +678,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
         '<div class="clock-unit"><div class="clock-num">'+String(d.secs).padStart(2,'0')+'</div><div class="clock-lab">Sec</div></div>';
     }
     var barEl = document.getElementById("clockBar");
-    if (barEl) barEl.style.width = Math.min(pctUsed,100).toFixed(2)+"%";
+    var pctClamped = Math.min(pctUsed,100);
+    if (barEl) barEl.style.width = pctClamped.toFixed(2)+"%";
+    var flagEl = document.getElementById("clockFlag");
+    if (flagEl) { flagEl.style.left = Math.min(Math.max(pctClamped,6),94)+"%"; flagEl.textContent = pctClamped.toFixed(1)+"% of budget used"; }
     var dateEl = document.getElementById("clockDate");
     if (dateEl) dateEl.textContent = depletionDate.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
   }
@@ -712,6 +760,22 @@ if ('serviceWorker' in navigator) {
   } else {
     els.forEach(animate);
   }
+})();
+</script>
+<script>
+// Reveal-on-scroll: sections, cards and the pull quote fade and rise into
+// place the first time they cross into view. Content stays fully visible
+// with no JS or with prefers-reduced-motion, this is presentational only.
+(function(){
+  var targets = document.querySelectorAll('.reveal');
+  if (!targets.length) return;
+  if (!('IntersectionObserver' in window)) { targets.forEach(function(el){ el.classList.add('in-view'); }); return; }
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) { entry.target.classList.add('in-view'); obs.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12 });
+  targets.forEach(function(el){ obs.observe(el); });
 })();
 </script>
 <script>

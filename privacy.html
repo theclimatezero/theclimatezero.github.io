@@ -258,7 +258,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:30px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px 24px;text-decoration:none;color:var(--ink);display:block;transition:transform .18s,box-shadow .18s,border-color .18s;position:relative;overflow:hidden}
 .card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(43,38,32,.08);border-color:var(--sky)}
-.card-icon{font-size:1.8rem;margin-bottom:14px;display:block}
+.card-icon{font-size:1.8rem;margin-bottom:14px;display:block;color:var(--sky-deep)}
 .card-title{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .card-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:14px}
 .card-cta{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sky-deep);display:flex;align-items:center;gap:6px}
@@ -309,7 +309,7 @@ html[data-theme="dark"] .kf-box{background:#1c2a33;border-color:#2a3d47}
 .related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
 .rel-card{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:18px 20px;text-decoration:none;color:var(--ink);display:block;transition:border-color .15s,transform .15s}
 .rel-card:hover{border-color:var(--sky);transform:translateY(-2px)}
-.rel-icon{font-size:1.3rem;margin-bottom:8px;display:block}
+.rel-icon{font-size:1.3rem;margin-bottom:8px;display:block;color:var(--sky-deep)}
 .rel-title{font-weight:600;font-size:.9rem;margin-bottom:4px}
 .rel-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
 @media print{
@@ -402,8 +402,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   <div class="related-inner">
     <div class="related-label">Related</div>
     <div class="related-grid">
-      <a href="index.html" class="rel-card"><span class="rel-icon">🏠</span><div class="rel-title">Homepage</div><div class="rel-desc">Back to the start.</div></a>
-      <a href="about.html" class="rel-card"><span class="rel-icon">📖</span><div class="rel-title">About</div><div class="rel-desc">More on this project.</div></a>
+      <a href="index.html" class="rel-card"><span class="rel-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/></svg></span><div class="rel-title">Homepage</div><div class="rel-desc">Back to the start.</div></a>
+      <a href="about.html" class="rel-card"><span class="rel-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5.5c-1.6-1-4-1.5-6.5-1.5v14.5c2.5 0 4.9.5 6.5 1.5 1.6-1 4-1.5 6.5-1.5V4c-2.5 0-4.9.5-6.5 1.5Z"/><path d="M12 5.5v14"/></svg></span><div class="rel-title">About</div><div class="rel-desc">More on this project.</div></a>
       
     </div>
   </div>
