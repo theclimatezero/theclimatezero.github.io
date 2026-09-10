@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shareable Climate Stats | ClimateZero</title>
 <meta name="description" content="Ten shareable, branded images of the sharpest climate data facts. Free to download and repost.">
-<link rel="canonical" href="https://theclimatezero.github.io/share-cards.html">
+<link rel="canonical" href="https://theclimatezero.org/share-cards.html">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23eaf3f9'/><circle cx='50' cy='50' r='26' fill='none' stroke='%233f8dc4' stroke-width='7'/><circle cx='50' cy='50' r='9' fill='%23c9683f'/></svg>">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
@@ -20,6 +20,8 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px}
 a{color:inherit}
+/* Consistent link behaviour: inline prose links (not styled buttons, cards or nav) always underline on hover, using the same colour and timing everywhere rather than varying page by page. */
+.about-body a,.fbrand-sub a,.sec-sub a,.kf-list a,.tl-d a,.mcard p a,.chart-src a,.dt-src a,.cf-note a,.calc-truth a,p a{transition:text-decoration-color .15s}
 nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(250,247,240,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .nav-logo{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);line-height:1.15}
 .nav-logo span{color:var(--sky-deep)}

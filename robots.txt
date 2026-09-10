@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://theclimatezero.github.io/sitemap.xml
+Sitemap: https://theclimatezero.org/sitemap.xml
