@@ -257,6 +257,15 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 .hub-h1 em{color:var(--clay);font-style:normal}
 .hub-sub{font-size:1rem;color:var(--muted);max-width:52ch;margin:0 auto 30px;line-height:1.75}
 .hub-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hub-shortcuts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;margin-top:28px;font-size:.82rem}
+.hub-shortcuts-lab{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hub-shortcuts a{color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:20px;transition:border-color .15s,color .15s}
+.hub-shortcuts a:hover{border-color:var(--sky);color:var(--sky-deep)}
+.headline-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;margin-top:26px;background:var(--line);border-radius:10px;overflow:hidden}
+.headline-item{display:block;background:var(--surface);padding:16px 18px;text-decoration:none;color:var(--ink);transition:background .15s}
+.headline-item:hover{background:var(--surface2)}
+.headline-src{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.headline-title{display:block;font-size:.86rem;font-weight:500;line-height:1.4}
 .hub-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface)}
 .hub-cell{padding:var(--sp-4) 22px;border-right:1px solid var(--line);text-align:center}
 .hub-cell:last-child{border-right:none}
@@ -491,6 +500,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
       <a href="explore.html" class="btn-p">Explore the map</a>
       <a href="five.html" class="btn-g">Five numbers, five minutes</a>
     </div>
+    <div class="hub-shortcuts">
+      <span class="hub-shortcuts-lab">Jump to a country:</span>
+      <a href="country-china.html">🇨🇳 China</a>
+      <a href="country-usa.html">🇺🇸 US</a>
+      <a href="country-india.html">🇮🇳 India</a>
+      <a href="country-germany.html">🇩🇪 Germany</a>
+      <a href="country-uk.html">🇬🇧 UK</a>
+      <a href="countries.html">All countries →</a>
+    </div>
   </div>
 </div>
 
@@ -507,19 +525,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   </div>
 </div>
 
-<div class="hub-strip">
-  <div class="hub-cell"><div class="hub-num" data-countup data-target="36.8" data-decimals="1" data-suffix=" Gt">0 Gt</div><div class="hub-lab">Global CO2, 2023</div></div>
-  <div class="hub-cell"><div class="hub-num" data-countup data-target="25" data-suffix="%">0%</div><div class="hub-lab">US share of CO2 since 1850</div></div>
-  <div class="hub-cell"><div class="hub-num" data-countup data-target="585" data-suffix=" GW">0 GW</div><div class="hub-lab">Renewables added in 2024</div></div>
-  <div class="hub-cell"><div class="hub-num" data-countup data-target="546000" data-locale="1">0</div><div class="hub-lab">Killed by heat each year</div></div>
-</div>
-
-<div class="live-ticker">
-  <div class="live-ticker-num" id="live-co2">0</div>
-  <div class="live-ticker-lab">Tonnes of CO2 emitted worldwide since you opened this page</div>
-</div>
-
-<div class="section reveal" style="padding-bottom:0">
+<div class="section reveal">
   <div class="clock-widget" id="clockWidget">
     <div class="clock-eyebrow">Remaining global carbon budget, 1.5°C</div>
     <div class="clock-digits" id="clockDigits"></div>
@@ -532,28 +538,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   </div>
 </div>
 
-<div class="section reveal" style="padding-bottom:20px">
-  <div class="sec-eye">Latest headlines</div>
-  <h2 class="sec-title">The warming is not necessarily permanent, if action follows.</h2>
-  <p class="sec-sub" style="margin-bottom:30px">In September 2026, the UN said passing 1.5°C now looks likely, but not final. Temperatures could still be brought back down later this century if emissions fall fast and carbon removal scales up. Some damage already locked in will not reverse either way. Here is where that story, and a few others, currently stand.</p>
-  <div class="chart-grid">
-    <div class="chart-card">
-      <div class="chart-title">UN: crossing 1.5°C looks likely, but not permanent</div>
-      <div class="chart-sub">UNEP · 2 September 2026</div>
-      <p class="fbrand-sub" style="margin:10px 0 0">A UNEP "overshoot" report says fast emissions cuts and carbon removal could still bring global temperatures back below 1.5°C later this century, though some losses already caused will not reverse.</p>
-      <div class="chart-src"><a href="https://www.unep.org/news-and-stories/press-release/unep-world-set-cross-15degc-global-warming-can-still-limit-adapt-and" target="_blank" rel="noopener">Read at UNEP →</a></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Guterres: "We can still bring warming back below 1.5°C"</div>
-      <div class="chart-sub">UN News · 2 September 2026</div>
-      <p class="fbrand-sub" style="margin:10px 0 0">The UN Secretary-General called for urgent action, warning that ice sheet loss and Amazon degradation become irreversible the longer temperatures stay above 1.5°C.</p>
-      <div class="chart-src"><a href="https://news.un.org/en/story/2026/09/1168240" target="_blank" rel="noopener">Read at UN News →</a></div>
-    </div>
-  </div>
-  <blockquote class="pull-quote reveal">"Ice sheet loss and Amazon degradation become irreversible the longer temperatures stay above 1.5°C."<cite>António Guterres, UN Secretary-General · UN News, 2 September 2026</cite></blockquote>
-</div>
-
-<div class="section reveal" style="padding-bottom:0">
+<div class="section reveal">
   <div class="sec-eye">What is actually happening</div>
   <h2 class="sec-title">Colour is disappearing from the world, in ways you can measure.</h2>
   <p class="sec-sub" style="margin-bottom:24px">Smoke greys out skies that were blue. Bleaching turns living reef white and grey where colour used to be. Drought drains green land to dust. None of this is a metaphor, it shows up in the data below, place by place, year by year.</p>
@@ -570,6 +555,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
       <img src="https://images.unsplash.com/photo-1691927458684-8b30380b9412?w=600&q=75" srcset="https://images.unsplash.com/photo-1691927458684-8b30380b9412?w=400&q=70 400w, https://images.unsplash.com/photo-1691927458684-8b30380b9412?w=600&q=75 600w, https://images.unsplash.com/photo-1691927458684-8b30380b9412?w=900&q=75 900w" sizes="(max-width:640px) 90vw, 33vw" width="600" height="450" alt="Smoke billowing from power plant cooling towers" loading="lazy">
       <div class="photo-caption"><span class="cap-tag">Emissions</span>Carbon pollution reached record levels again in 2025, the source the rest of this page traces back to.</div>
     </div>
+  </div>
+
+  <blockquote class="pull-quote reveal">"Ice sheet loss and Amazon degradation become irreversible the longer temperatures stay above 1.5°C."<cite>António Guterres, UN Secretary-General · UN News, 2 September 2026</cite></blockquote>
+
+  <div class="headline-strip">
+    <a href="https://www.unep.org/news-and-stories/press-release/unep-world-set-cross-15degc-global-warming-can-still-limit-adapt-and" target="_blank" rel="noopener" class="headline-item">
+      <span class="headline-src">UNEP · 2 Sept 2026</span>
+      <span class="headline-title">UN: crossing 1.5°C looks likely, but not permanent →</span>
+    </a>
+    <a href="https://news.un.org/en/story/2026/09/1168240" target="_blank" rel="noopener" class="headline-item">
+      <span class="headline-src">UN News · 2 Sept 2026</span>
+      <span class="headline-title">Guterres: "We can still bring warming back below 1.5°C" →</span>
+    </a>
   </div>
 </div>
 
@@ -628,20 +626,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
   </div>
 </footer>
 
-<script>
-(function(){
-  var ratePerSecond = 37800000000 / (365.25*24*3600); // 37.8 Gt/year in tonnes
-  var start = Date.now();
-  var el = document.getElementById('live-co2');
-  function tick(){
-    var elapsed = (Date.now()-start)/1000;
-    var total = Math.round(elapsed*ratePerSecond);
-    if(el) el.textContent = total.toLocaleString();
-  }
-  setInterval(tick, 200);
-  tick();
-})();
-</script>
 <script>
 // The 1.5°C carbon clock: remaining global carbon budget per IPCC AR6 WG1
 // (2021), 500 GtCO2 from 2020-01-01 for a 50% chance of staying under
