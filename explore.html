@@ -38,8 +38,10 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--i
 .page{min-height:100vh;display:flex;flex-direction:column}
 
 header{padding:1rem 1.5rem;border-bottom:0.5px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:var(--surface);flex-wrap:wrap;gap:var(--sp-2)}
+.logo-block{display:flex;flex-direction:column;gap:2px}
 .logo{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--ink);text-decoration:none}
 .logo span{color:var(--terracotta)}
+.nav-tagline{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 nav{display:flex;gap:1.5rem;font-size:13px;flex-wrap:wrap}
 nav a{color:var(--muted);text-decoration:none}
 nav a:hover{color:var(--ink)}
@@ -115,7 +117,10 @@ html[data-theme="dark"] .country-path{stroke:#14120f}
 <div class="page">
 
   <header>
-    <a class="logo" href="https://theclimatezero.org/index.html">Climate<span>Zero</span></a>
+    <div class="logo-block">
+      <a class="logo" href="https://theclimatezero.org/index.html">Climate<span>Zero</span></a>
+      <div class="nav-tagline">The ledger on who's paying.</div>
+    </div>
     <nav>
       <a href="https://theclimatezero.org/explore.html" class="active">Explore</a>
       <a href="https://theclimatezero.org/countries.html">Countries</a>
