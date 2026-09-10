@@ -55,6 +55,10 @@ nav a.active{color:#1a1a18;font-weight:500}
 .detail-cell .dl{font-size:10.5px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
 .detail-link{display:inline-block;margin-top:16px;font-size:13px;color:#3f8dc4;text-decoration:none;font-weight:500}
 .detail-link:hover{text-decoration:underline}
+.detail-photo{width:calc(100% + 40px);margin:-20px -20px 14px;height:110px;overflow:hidden;position:relative;border-radius:12px 12px 0 0}
+.detail-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(.45) contrast(1.06) brightness(.95)}
+.detail-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,20,18,0) 40%,rgba(20,20,18,.55) 100%),linear-gradient(135deg,rgba(41,111,158,.3),rgba(168,85,47,.26));mix-blend-mode:multiply}
+.detail-photo-cap{position:absolute;bottom:6px;left:12px;color:#f3ecdd;font-size:10.5px;letter-spacing:.03em;z-index:1}
 @media(max-width:640px){.detail-panel{left:16px;right:16px;width:auto;top:auto;bottom:16px;max-height:60vh}}
 .tooltip .t-name{font-weight:500;font-size:13px;margin-bottom:2px;color:#1a1a18}
 .tooltip .t-val{color:#777}
@@ -62,8 +66,8 @@ nav a.active{color:#1a1a18;font-weight:500}
 .no-data{fill:#e4e2dc}
 .ocean{fill:#d4e4ef}
 .graticule{fill:none;stroke:#c0d4e0;stroke-width:0.3}
-.country-path{stroke:#fff;stroke-width:0.4;cursor:pointer;transition:opacity 0.12s ease,stroke-width 0.12s ease;touch-action:manipulation}
-.country-path:hover{stroke:#555;stroke-width:0.8;opacity:0.85}
+.country-path{stroke:#fff;stroke-width:0.4;cursor:pointer;transition:opacity 0.12s ease,stroke-width 0.12s ease,filter 0.12s ease;touch-action:manipulation}
+.country-path:hover{stroke:#555;stroke-width:0.9;opacity:0.85;filter:brightness(1.12) saturate(1.15)}
 #map-svg-wrap svg{will-change:auto}
 
 .theme-btn{background:#fff;border:1px solid #ccc;border-radius:20px;padding:6px 12px;font-size:12px;color:#777;cursor:pointer;display:flex;align-items:center;gap:6px}
@@ -259,6 +263,7 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
 // EMISSIONS/COUNTRY_STATS data and the same TopoJSON country shapes —
 // nothing about the underlying data changes, only how it's viewed.
 let globeInstance = null;
+let hoveredPolygon = null;
 let globeInitPromise = null;
 const globeWrap = document.getElementById("globe-wrap");
 const globeToggleBtn = document.getElementById("globe-toggle");
@@ -280,7 +285,7 @@ function initGlobe() {
         .atmosphereColor(isDark ? "#7fa8ff" : "#8fb8ff")
         .atmosphereAltitude(0.18)
         .polygonsData(countries.features)
-        .polygonAltitude(0.006)
+        .polygonAltitude(d => d === hoveredPolygon ? 0.02 : 0.006)
         .polygonCapColor(d => {
           const iso = ISO_N2A[String(d.id).padStart(3, "0")];
           return EMISSIONS[iso] ? colorScale(EMISSIONS[iso]) : (isDark ? "#3a352c" : "#e4e2dc");
@@ -299,6 +304,8 @@ function initGlobe() {
         })
         .onPolygonHover(d => {
           globeWrap.style.cursor = d ? "pointer" : "grab";
+          hoveredPolygon = d;
+          globeInstance.polygonAltitude(x => x === hoveredPolygon ? 0.02 : 0.006);
         });
 
       globeInstance.pointOfView({ altitude: 2.2 }, 0);
@@ -386,13 +393,21 @@ function showDetail(iso) {
   const stats = COUNTRY_STATS[iso];
   const co2 = EMISSIONS[iso];
 
-  let html = stats
+  // Country profile pages already carry a real header photo of a place in
+  // that country (header-<slug>.jpg); reuse the same image here so a real
+  // place, not just numbers, appears the moment its data is shown.
+  const photoSlug = stats && stats.page ? stats.page.replace("country-", "").replace(".html", "") : null;
+  const photoHtml = photoSlug
+    ? `<div class="detail-photo"><img src="header-${photoSlug}.jpg" alt="A place in ${name}" loading="lazy"><span class="detail-photo-cap">${name}</span></div>`
+    : "";
+
+  let html = photoHtml + (stats
     ? `<div style="display:flex;align-items:center;gap:14px;margin-bottom:2px">
         ${fingerprintSVG(stats)}
         <div><div class="detail-name" style="margin-bottom:0">${name}</div>
         <button class="detail-link" style="background:none;border:none;cursor:pointer;padding:0;font-family:inherit;margin-top:4px" onclick="sonifyCountry('${iso}')">🔊 Hear this country's data</button></div>
       </div>`
-    : `<div class="detail-name">${name}</div>`;
+    : `<div class="detail-name">${name}</div>`);
 
   if (stats) {
     html += `<div class="detail-grid">

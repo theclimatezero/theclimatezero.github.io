@@ -43,6 +43,8 @@ html[data-theme="dark"] .ld-card{background:var(--surface)}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
 a{color:inherit}
+/* Consistent link behaviour: inline prose links (not styled buttons, cards or nav) always underline on hover, using the same colour and timing everywhere rather than varying page by page. */
+.about-body a,.fbrand-sub a,.sec-sub a,.kf-list a,.tl-d a,.mcard p a,.chart-src a,.dt-src a,.cf-note a,.calc-truth a,p a{transition:text-decoration-color .15s}
 nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(250,247,240,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .nav-logo{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--ink);line-height:1.15}
 .nav-logo span{color:var(--sky-deep)}
