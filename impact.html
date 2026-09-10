@@ -135,7 +135,7 @@ hr.div{border:none;border-top:1px solid var(--line);max-width:1160px;margin:0 au
 .impact-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
 .itab{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;padding:8px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);color:var(--muted);cursor:pointer}
 .itab.active{background:var(--sky-deep);border-color:var(--sky-deep);color:#fff}
-.big-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:2px;background:var(--line);border-radius:10px;overflow:hidden}
+.big-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:2px;background:var(--line);border-radius:10px;overflow:hidden;margin-top:22px}
 .bstat{background:var(--surface);padding:22px 20px;position:relative}
 .bstat::after{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--sky)}
 .bstat.b-red::after{background:var(--terracotta)}.bstat.b-amber::after{background:var(--sand)}
@@ -355,6 +355,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.c
 .pause-num em{color:var(--clay);font-style:normal}
 .pause-sub{font-size:1rem;color:var(--muted);margin-top:18px;max-width:44ch;margin-left:auto;margin-right:auto;line-height:1.7}
 
+.jump-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:28px 0 44px;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.jump-nav a{color:var(--sky-deep);text-decoration:none}
+.jump-nav a:hover{text-decoration:underline}
+.jump-nav .dot{width:3px;height:3px;border-radius:50%;background:var(--line);flex-shrink:0}
+
 /* Pull quote: a large, editorial callout pulled from the surrounding
    copy, set in the serif display face so long-form sections don't read
    as a flat wall of body text. */
@@ -482,10 +487,16 @@ html[data-theme="dark"] .annotation-flag::after{border-top-color:var(--sky-deep)
       <li>Climate related disasters could displace <strong>44 to 216 million people</strong> within their own countries by 2050, depending on how much emissions are cut.</li>
     </ul>
   </div>
+  <div class="jump-nav" aria-label="Jump to section">
+    <a href="#stats">Stats by category</a><span class="dot"></span><a href="#charts">Charts</a><span class="dot"></span><a href="#funding">Funding gap</a><span class="dot"></span><a href="#timeline">Timeline</a>
+  </div>
+
+  <div id="stats"></div>
   <div class="impact-tabs" id="impact-tabs" role="tablist" aria-label="Impact category"></div>
   <div class="big-stats" id="big-stats"></div>
 
-  <div class="chart-grid" style="margin-top:30px">
+  <div id="charts"></div>
+  <div class="chart-grid" style="margin-top:52px">
     <div class="chart-card"><div class="chart-title">Global temperature rise</div><div class="chart-sub">Degrees C above 1850 to 1900</div><svg id="c-temp" viewBox="0 0 340 190" style="width:100%" role="img" aria-label="Line chart of global temperature rise from 1900 to 2024"></svg><div class="chart-loading skeleton" id="c-temp-skel"></div><div class="chart-src">Source: <a href="https://data.giss.nasa.gov/gistemp/" target="_blank">NASA GISTEMP</a></div></div>
     <div class="chart-card"><div class="chart-title">Ocean heat content</div><div class="chart-sub">Zettajoules above 1955 to 2006 average</div><svg id="c-ocean" viewBox="0 0 340 190" style="width:100%" role="img" aria-label="Line chart of ocean heat content since 1960"></svg><div class="chart-loading skeleton" id="c-ocean-skel"></div><div class="chart-src">Source: <a href="https://www.ncei.noaa.gov/access/global-ocean-heat-content/" target="_blank">NOAA</a></div></div>
     <div class="chart-card"><div class="chart-title">Coral reefs hit by bleaching stress</div><div class="chart-sub">Percent of world reef area</div><svg id="c-coral" viewBox="0 0 340 190" style="width:100%" role="img" aria-label="Bar chart of coral reef bleaching events since 1998"></svg><div class="chart-loading skeleton" id="c-coral-skel"></div><div class="chart-src">Source: <a href="https://coralreefwatch.noaa.gov" target="_blank">NOAA Coral Reef Watch</a></div></div>
@@ -494,7 +505,7 @@ html[data-theme="dark"] .annotation-flag::after{border-top-color:var(--sky-deep)
     <div class="chart-card"><div class="chart-title">Heat related deaths per year</div><div class="chart-sub">Thousands of deaths, global average</div><svg id="c-deaths" viewBox="0 0 340 190" style="width:100%" role="img" aria-label="Bar chart of heat related deaths per decade"></svg><div class="chart-loading skeleton" id="c-deaths-skel"></div><div class="chart-src">Source: <a href="https://www.who.int" target="_blank">WHO and Lancet Countdown</a></div></div>
   </div>
 
-  <div class="dtable-wrap">
+  <div class="dtable-wrap" style="margin-top:52px">
     <div class="dtable-head"><span>Indicator</span><span>Latest figure</span><span>Comparison</span><span>Source</span></div>
     <div id="dtable-rows"></div>
     <button class="dtable-toggle" id="dtable-toggle" onclick="toggleDTable()">Show all rows</button>
@@ -503,39 +514,15 @@ html[data-theme="dark"] .annotation-flag::after{border-top-color:var(--sky-deep)
 
 <hr class="div">
 
-<div class="pause-moment">
+<div class="pause-moment" id="funding">
   <div class="pause-num">$822m <span style="font-size:.4em;color:var(--muted)">pledged</span><br><em>$395bn</em> <span style="font-size:.4em;color:var(--muted)">owed every year</span></div>
-  <p class="pause-sub">The world agreed to pay for climate damage it did not prevent. What follows is the gap between that promise and reality.</p>
-</div>
-
-<div class="section reveal" id="paying">
-  <div class="chapter">The bill</div>
-  <div class="sec-eye">Who is actually paying</div>
-  <h2 class="sec-title">Agreed. Not paid.</h2>
-  
-  <div class="ld-grid">
-    <div class="ld-card">
-      <div class="ld-big ld-pledge">$822m</div>
-      <div class="ld-lab">Pledged to the Loss and Damage Fund</div>
-      <div class="ld-desc">Total pledges since COP27. Around $448 million has been disbursed. The United States withdrew its pledge in 2025.</div>
-      <div class="chart-src">Source: <a href="https://unfccc.int/fund-for-responding-to-loss-and-damage" target="_blank">UNFCCC</a></div>
-    </div>
-    <div class="ld-card">
-      <div class="ld-big ld-need">$395bn</div>
-      <div class="ld-lab">Estimated annual loss and damage</div>
-      <div class="ld-desc">A 2024 study in Nature put annual climate loss and damage at around $395 billion. Total pledges to date amount to under a quarter of one percent of a single year's damage.</div>
-      <div class="chart-src">Source: <a href="https://www.nature.com/" target="_blank">Nature, 2024</a></div>
-    </div>
-  </div>
-  <div class="chart-card" style="margin-top:16px">
-    <div class="chart-title">Pledged versus needed, per year</div>
-    <div class="gapbar"><div class="gapbar-fill" style="width:0.21%"></div><div class="gapbar-txt">$822m pledged in total, against $395bn of damage every year</div></div>
-  </div>
+  <p class="pause-sub">The world agreed to pay for climate damage it did not prevent. That gap, who pledged what, who is paying, and what's still owed, has its own full breakdown on the Loss &amp; Damage tracker.</p>
+  <a href="loss-and-damage.html" class="btn-p" style="margin-top:22px;display:inline-block">Open the Loss &amp; Damage tracker →</a>
 </div>
 
 <hr class="div">
 
-<div class="section reveal" id="timeline">
+<div class="section reveal" id="timeline" style="padding-top:var(--sp-6)">
   <div class="sec-eye">How we got here</div>
   <h2 class="sec-title">A timeline of the bill.</h2>
   
