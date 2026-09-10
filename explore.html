@@ -279,11 +279,12 @@ function initGlobe() {
       globeWrap.innerHTML = "";
       const isDark = document.documentElement.getAttribute("data-theme") === "dark";
       globeInstance = window.Globe()(globeWrap)
-        .globeImageUrl(null)
+        .globeImageUrl("https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-day.jpg")
+        .bumpImageUrl("https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png")
         .backgroundColor("rgba(0,0,0,0)")
         .showAtmosphere(true)
-        .atmosphereColor(isDark ? "#7fa8ff" : "#8fb8ff")
-        .atmosphereAltitude(0.18)
+        .atmosphereColor(isDark ? "#5ec8ff" : "#6fc3ff")
+        .atmosphereAltitude(0.22)
         .polygonsData(countries.features)
         .polygonAltitude(d => d === hoveredPolygon ? 0.02 : 0.006)
         .polygonCapColor(d => {
@@ -313,7 +314,27 @@ function initGlobe() {
       controls.autoRotate = true;
       controls.autoRotateSpeed = 0.35;
       controls.enableZoom = true;
-      globeWrap.addEventListener("pointerdown", () => { controls.autoRotate = false; }, { once: true });
+      // Only pause the auto-rotation for an actual drag (moving the globe
+      // around), not for a plain click on a country to open its detail
+      // panel — and resume rotating on its own again shortly after a drag
+      // ends, rather than staying stopped forever.
+      let dragStartX = 0, dragStartY = 0, isDragging = false, resumeTimer = null;
+      globeWrap.addEventListener("pointerdown", (e) => {
+        dragStartX = e.clientX; dragStartY = e.clientY; isDragging = false;
+        clearTimeout(resumeTimer);
+      });
+      globeWrap.addEventListener("pointermove", (e) => {
+        if (Math.abs(e.clientX - dragStartX) > 4 || Math.abs(e.clientY - dragStartY) > 4) {
+          isDragging = true;
+          controls.autoRotate = false;
+        }
+      });
+      window.addEventListener("pointerup", () => {
+        if (isDragging) {
+          clearTimeout(resumeTimer);
+          resumeTimer = setTimeout(() => { controls.autoRotate = true; }, 2500);
+        }
+      });
 
       function sizeGlobe() {
         const r = mapWrap.getBoundingClientRect();
