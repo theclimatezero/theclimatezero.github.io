@@ -4,16 +4,11 @@
 <script>if(location.hostname==="theclimatezero.github.io"){location.replace("https://theclimatezero.org"+location.pathname+location.search+location.hash);}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sources & Methodology | ClimateZero</title>
-<meta name="description" content="Where every figure on ClimateZero comes from, how the Climate Justice Gap index is built, and the full dataset available to download.">
+<title>The 1.5°C Carbon Clock | ClimateZero</title>
+<meta name="description" content="A live countdown to when the world's remaining carbon budget for 1.5°C runs out, based on the IPCC's published figures. Embeddable on any site.">
 <meta name="author" content="ClimateZero">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://theclimatezero.org/methodology.html">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="ClimateZero">
-<meta property="og:title" content="Sources & Methodology | ClimateZero">
-<meta property="og:description" content="Where every figure on ClimateZero comes from, and the full dataset available to download.">
-<meta property="og:url" content="https://theclimatezero.org/methodology.html">
+<link rel="canonical" href="https://theclimatezero.org/carbon-clock.html">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
@@ -60,16 +55,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .mcard h4{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky-deep);margin-bottom:9px}
 .mcard p{font-size:.84rem;color:var(--muted);line-height:1.65}
 .mcard a{color:var(--sky-deep);text-decoration:none}
-.src-list{list-style:none;margin-top:14px}
-.src-list li{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.86rem}
-.src-list li:last-child{border-bottom:none}
-.src-list a{color:var(--sky-deep);text-decoration:none}
-.src-what{color:var(--muted);font-size:.8rem;text-align:right}
-.dl-box{background:var(--sky-light);border:1px solid #d7e8f3;border-radius:12px;padding:22px 24px;margin:26px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.dl-box h4{font-size:1rem;margin-bottom:4px}
-.dl-box p{font-size:.82rem;color:var(--muted)}
-.btn-p{background:var(--sky-deep);color:#fff;border:none;padding:13px 26px;border-radius:8px;font-family:var(--sans);font-size:.9rem;font-weight:600;cursor:pointer;transition:filter .2s,transform .15s;text-decoration:none;display:inline-block}
-.btn-p:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.clock-frame{width:100%;max-width:640px;margin:0 auto}
+.embed-box{background:var(--surface2);border-radius:10px;padding:16px 18px;margin-top:16px;font-family:var(--mono);font-size:.72rem;color:var(--ink);overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+.copy-btn{margin-top:10px;background:var(--sky-deep);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-family:var(--sans);font-size:.85rem;font-weight:600;cursor:pointer}
+.copy-btn:hover{filter:brightness(1.08)}
 @media(max-width:900px){.method-grid{grid-template-columns:1fr}}
 @media(max-width:640px){
   nav{padding:12px 18px}
@@ -77,8 +66,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   .nav-links.open{display:flex;flex-direction:column;position:absolute;top:58px;left:0;right:0;background:var(--bg);padding:16px 20px;gap:14px;border-bottom:1px solid var(--line)}
   .hamburger{display:flex}
   .section{padding:52px 18px}
-  .src-list li{flex-direction:column;gap:4px}
-  .src-what{text-align:left}
 }
 .breadcrumb{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-bottom:6px;padding-top:96px}
 .breadcrumb a{color:var(--muted);text-decoration:none}
@@ -104,6 +91,19 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 @media(max-width:640px){.footer-grid{grid-template-columns:1fr}}
 .skip-link{position:absolute;top:-100px;left:10px;background:var(--sky-deep);color:#fff;padding:10px 18px;border-radius:6px;font-family:var(--sans);font-size:.85rem;font-weight:600;text-decoration:none;z-index:999;transition:top .15s}
 .skip-link:focus{top:10px}
+
+/* The clock widget itself — designed to also work standalone in an iframe embed */
+.clock-widget{background:#14120f;color:#f3ecdd;border-radius:16px;padding:32px 28px;text-align:center;font-family:var(--sans)}
+.clock-eyebrow{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#7bb8e0;margin-bottom:14px}
+.clock-digits{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.clock-unit{min-width:64px}
+.clock-num{font-family:var(--serif);font-weight:900;font-size:2.1rem;line-height:1;color:#f3ecdd}
+.clock-lab{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:#a89f8c;margin-top:4px}
+.clock-bar{height:8px;background:#2a251e;border-radius:4px;overflow:hidden;margin:18px 0 10px;max-width:420px;margin-left:auto;margin-right:auto}
+.clock-bar-fill{height:100%;background:linear-gradient(90deg,#8fb56a,#e0b787,#e0895a)}
+.clock-sub{font-size:.78rem;color:#c9c2b0;line-height:1.6;max-width:44ch;margin:0 auto}
+.clock-src{font-family:var(--mono);font-size:.6rem;color:#7d7565;margin-top:14px}
+.clock-src a{color:#7bb8e0;text-decoration:none}
 </style>
 <script>(function(){var t=localStorage.getItem('cb-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 </head>
@@ -116,9 +116,9 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
   </div>
   <ul class="nav-links" id="navLinks">
     <li><a href="explore.html">Explore</a></li>
-    <li><a href="countries.html">Countries</a></li>
     <li><a href="justice-index.html">Justice Gap</a></li>
     <li><a href="loss-and-damage.html">Loss &amp; Damage</a></li>
+    <li><a href="carbon-clock.html" style="color:var(--sky-deep)">Carbon Clock</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
   <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">◐ Theme</button>
@@ -128,52 +128,50 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 </nav>
 
 <div class="section" id="main-content" tabindex="-1" style="padding-bottom:0">
-  <div class="breadcrumb"><a href="index.html">Home</a> / Sources &amp; Methodology</div>
-  <div class="dateline"><span>Updated September 2026</span></div>
+  <div class="breadcrumb"><a href="index.html">Home</a> / Carbon Clock</div>
+  <div class="dateline"><span>Live, updates every second</span><span class="dot"></span><span>Based on IPCC AR6 figures</span></div>
 </div>
 <div class="section" style="padding-top:26px">
-  <div class="sec-eye">Transparency</div>
-  <h2 class="sec-title">Sources &amp; methodology.</h2>
-  <p class="sec-sub">Every figure published on ClimateZero traces back to a named, public source. This page lists where the core datasets come from, explains how the two original indices on this site are built, and links to the full dataset for anyone who wants to check the numbers themselves.</p>
+  <div class="sec-eye">A live countdown</div>
+  <h2 class="sec-title">The 1.5°C Carbon Clock.</h2>
+  <p class="sec-sub">The world has a fixed, shrinking budget of CO2 it can still emit and keep a reasonable chance of holding warming to 1.5°C. This clock counts it down in real time, based on the IPCC's own published figures, so the number keeps ticking whether or not anyone is watching.</p>
 
-  <div class="sec-eye" style="margin-top:10px">Primary data sources</div>
-  <ul class="src-list">
-    <li><a href="https://ourworldindata.org/co2-and-greenhouse-gas-emissions" target="_blank">Our World in Data — CO2 &amp; GHG Emissions</a><span class="src-what">Annual and historical emissions, emissions share</span></li>
-    <li><a href="https://www.iea.org" target="_blank">International Energy Agency (IEA)</a><span class="src-what">Country energy mix, coal and oil dependency</span></li>
-    <li><a href="https://ember-climate.org/data/" target="_blank">Ember Global Electricity Review</a><span class="src-what">Renewable electricity share by country</span></li>
-    <li><a href="https://www.irena.org/Data" target="_blank">IRENA Renewable Capacity Statistics</a><span class="src-what">Global renewable capacity growth</span></li>
-    <li><a href="https://www.who.int/data/gho" target="_blank">World Health Organization, Global Health Observatory</a><span class="src-what">Ambient air pollution attributable deaths (indicator AIR_41, 2021 data)</span></li>
-    <li><a href="https://www.iqair.com/world-air-quality-report" target="_blank">IQAir World Air Quality Report 2025</a><span class="src-what">City and national PM2.5 concentrations</span></li>
-    <li><a href="https://www.ipcc.ch" target="_blank">Intergovernmental Panel on Climate Change (IPCC)</a><span class="src-what">Warming trends, scientific consensus figures</span></li>
-    <li><a href="https://unfccc.int" target="_blank">UNFCCC / Fund for Responding to Loss and Damage</a><span class="src-what">Loss and Damage Fund pledges and disbursement</span></li>
-    <li><a href="https://www.germanwatch.org/en/cri" target="_blank">Germanwatch Global Climate Risk Index</a><span class="src-what">Country vulnerability rankings</span></li>
-  </ul>
-
-  <div class="dl-box">
-    <div>
-      <h4>Full country dataset</h4>
-      <p>Every figure behind the map, country pages and Justice Gap index, in one CSV file.</p>
+  <div class="clock-frame">
+    <div class="clock-widget" id="clockWidget">
+      <div class="clock-eyebrow">Remaining global carbon budget, 1.5°C</div>
+      <div class="clock-digits" id="clockDigits"></div>
+      <div class="clock-bar"><div class="clock-bar-fill" id="clockBar" style="width:0%"></div></div>
+      <div class="clock-sub" id="clockSub">At current emission rates, the remaining budget runs out around <strong id="clockDate">—</strong>.</div>
+      <div class="clock-src">Source: <a href="https://www.ipcc.ch/report/ar6/wg1/" target="_blank">IPCC AR6 WG1</a>, remaining budget for 50% chance of &lt;1.5°C from Jan 2020: 500 GtCO2. Depletion modelled at ClimateZero's published rate of ~36.8 GtCO2/year.</div>
     </div>
-    <a href="climatezero-country-data.csv" class="btn-p">Download CSV</a>
   </div>
 
-  <div class="sec-eye" style="margin-top:36px">Original analysis on this site</div>
-  <h2 class="sec-title" style="font-size:1.6rem">Two things we built ourselves.</h2>
+  <div class="sec-eye" style="margin-top:40px">Embed this on your own site</div>
+  <h2 class="sec-title" style="font-size:1.5rem">Copy the code below.</h2>
+  <p class="about-body">This clock is a standalone page, so it can be dropped into any website as an iframe. It will keep counting down independently wherever it's embedded.</p>
+  <div class="embed-box" id="embedCode">&lt;iframe src="https://theclimatezero.org/carbon-clock-embed.html" width="480" height="280" style="border:none;border-radius:16px" title="1.5°C Carbon Clock"&gt;&lt;/iframe&gt;</div>
+  <button class="copy-btn" onclick="copyEmbed()">Copy embed code</button>
+
+  <div class="sec-eye" style="margin-top:40px">How this is calculated</div>
+  <h2 class="sec-title" style="font-size:1.5rem">Methodology.</h2>
   <div class="method-grid">
     <div class="mcard">
-      <h4>The Climate Justice Gap index</h4>
-      <p>An original composite score, historical emissions share minus estimated GDP loss from climate impacts, ranking countries by the gap between contribution and consequence. Full formula and caveats on the <a href="justice-index.html">Justice Gap page</a>.</p>
+      <h4>The starting budget</h4>
+      <p>The IPCC's Sixth Assessment Report (2021) estimated a remaining global carbon budget of <strong>500 billion tonnes of CO2</strong> from the start of 2020, for a 50% chance of keeping warming below 1.5°C. This is a widely cited, peer-reviewed figure, not an original ClimateZero estimate.</p>
     </div>
     <div class="mcard">
-      <h4>The Loss &amp; Damage tracker</h4>
-      <p>A compiled, cross-referenced record of what has been pledged, transferred and disbursed through the UN Loss and Damage Fund, drawn from independent financial and climate journalism rather than a single press release. See the <a href="loss-and-damage.html">tracker page</a>.</p>
+      <h4>The depletion rate</h4>
+      <p>We use the same global annual CO2 emissions figure published elsewhere on this site: <strong>36.8 GtCO2 in 2023</strong>. The clock simply subtracts emissions from the remaining budget at a constant per-second rate based on this figure, it is a simplified linear model, not a scientific projection of future emissions.</p>
+    </div>
+    <div class="mcard">
+      <h4>What this does and doesn't mean</h4>
+      <p>Reaching zero on this clock does not mean climate change "ends" there, it marks the point past which holding warming to 1.5°C with even a 50% likelihood becomes very difficult without large-scale carbon removal. Warming continues on a spectrum well beyond that point.</p>
+    </div>
+    <div class="mcard">
+      <h4>Inspiration</h4>
+      <p>This format follows in the tradition of long-running carbon budget clocks such as the <a href="https://www.mcc-berlin.net/en/research/co2-budget.html" target="_blank">MCC Berlin Carbon Clock</a> and <a href="https://climateclock.world" target="_blank">Climate Clock</a>, both of which are excellent, more detailed tools worth exploring directly.</p>
     </div>
   </div>
-
-  <div class="sec-eye" style="margin-top:36px">Our standard</div>
-  <h2 class="sec-title" style="font-size:1.6rem">What we do, and do not, publish.</h2>
-  <p class="about-body">Every number on this site is sourced from a named organisation, with a link to that source shown alongside it wherever it appears. Where figures from different sources conflict, we show the range rather than picking a single number to look tidy. Where we could not find a reliable figure for a particular country or statistic, that gap is shown honestly as "no data published" rather than filled in with an estimate. This matters more to us than having a complete-looking table: a site that quietly invents numbers to avoid gaps is not one anyone should trust, least of all on a subject where the stakes are this high.</p>
-  <p class="about-body">If you spot a figure that looks wrong, out of date, or a source that has updated, <a href="about.html" style="color:var(--sky-deep)">get in touch</a> and we will correct it.</p>
 </div>
 
 <footer>
@@ -183,8 +181,8 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
       <div class="fbrand-tag">The ledger on who's paying.</div>
       <p class="fbrand-sub">Tracking who contributes to climate change, who bears the costs, and how the world is responding.</p>
     </div>
-    <div class="fcol"><h4>Tools</h4><ul><li><a href="explore.html">World map</a></li><li><a href="justice-index.html">Justice Gap index</a></li><li><a href="loss-and-damage.html">Loss &amp; Damage tracker</a></li><li><a href="compare.html">Compare countries</a></li></ul></div>
-    <div class="fcol"><h4>Data</h4><ul><li><a href="methodology.html">Sources &amp; methodology</a></li><li><a href="climatezero-country-data.csv">Download dataset (CSV)</a></li><li><a href="https://ourworldindata.org" target="_blank">Our World in Data</a></li></ul></div>
+    <div class="fcol"><h4>Tools</h4><ul><li><a href="explore.html">World map</a></li><li><a href="justice-index.html">Justice Gap index</a></li><li><a href="loss-and-damage.html">Loss &amp; Damage tracker</a></li><li><a href="carbon-clock.html">Carbon Clock</a></li></ul></div>
+    <div class="fcol"><h4>Data</h4><ul><li><a href="methodology.html">Sources &amp; methodology</a></li><li><a href="climatezero-country-data.csv">Download dataset (CSV)</a></li></ul></div>
     <div class="fcol"><h4>About</h4><ul><li><a href="about.html">Our story</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="mailto:theclimatebill@gmail.com">theclimatebill@gmail.com</a></li></ul></div>
   </div>
   <div class="footer-bottom">
@@ -193,6 +191,65 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding:48px 3
 </footer>
 
 <script>
+// Remaining budget per IPCC AR6 WG1 (2021): 500 GtCO2 from 2020-01-01 for
+// a 50% chance of staying under 1.5°C. Depletion modelled at ClimateZero's
+// own published 2023 global CO2 figure of 36.8 Gt/year.
+const BUDGET_START_TONNES = 500e9;
+const BUDGET_START_DATE = new Date("2020-01-01T00:00:00Z");
+const ANNUAL_EMISSIONS_TONNES = 36.8e9;
+const TONNES_PER_MS = ANNUAL_EMISSIONS_TONNES / (365.25*24*60*60*1000);
+
+function computeRemaining(){
+  const elapsedMs = Date.now() - BUDGET_START_DATE.getTime();
+  const used = elapsedMs * TONNES_PER_MS;
+  const remaining = Math.max(BUDGET_START_TONNES - used, 0);
+  const msLeft = remaining / TONNES_PER_MS;
+  const depletionDate = new Date(Date.now() + msLeft);
+  return { remaining, msLeft, depletionDate, pctUsed: (used/BUDGET_START_TONNES)*100 };
+}
+
+function fmtDuration(ms){
+  const totalSec = Math.floor(ms/1000);
+  const years = Math.floor(totalSec/(365.25*24*3600));
+  let rem = totalSec - years*365.25*24*3600;
+  const days = Math.floor(rem/(24*3600)); rem -= days*24*3600;
+  const hours = Math.floor(rem/3600); rem -= hours*3600;
+  const mins = Math.floor(rem/60);
+  const secs = Math.floor(rem - mins*60);
+  return {years, days, hours, mins, secs};
+}
+
+function tickClock(){
+  const { remaining, msLeft, depletionDate, pctUsed } = computeRemaining();
+  const d = fmtDuration(msLeft);
+  const digitsEl = document.getElementById("clockDigits");
+  if (digitsEl) {
+    digitsEl.innerHTML = `
+      <div class="clock-unit"><div class="clock-num">${d.years}</div><div class="clock-lab">Years</div></div>
+      <div class="clock-unit"><div class="clock-num">${d.days}</div><div class="clock-lab">Days</div></div>
+      <div class="clock-unit"><div class="clock-num">${d.hours}</div><div class="clock-lab">Hours</div></div>
+      <div class="clock-unit"><div class="clock-num">${String(d.mins).padStart(2,'0')}</div><div class="clock-lab">Min</div></div>
+      <div class="clock-unit"><div class="clock-num">${String(d.secs).padStart(2,'0')}</div><div class="clock-lab">Sec</div></div>
+    `;
+  }
+  const barEl = document.getElementById("clockBar");
+  if (barEl) barEl.style.width = Math.min(pctUsed,100).toFixed(2)+"%";
+  const dateEl = document.getElementById("clockDate");
+  if (dateEl) dateEl.textContent = depletionDate.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+function copyEmbed(){
+  const text = document.getElementById("embedCode").textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent = "✓ Copied";
+    setTimeout(()=>{ btn.textContent = old; }, 1500);
+  }).catch(()=>{});
+}
+
 function toggleTheme(){
   var html=document.documentElement;
   var isDark=html.getAttribute('data-theme')==='dark';
