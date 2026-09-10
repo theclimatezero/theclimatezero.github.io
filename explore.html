@@ -284,8 +284,19 @@ function initGlobe() {
         .polygonsData(countries.features)
         .polygonAltitude(d => d === hoveredPolygon ? 0.02 : 0.006)
         .polygonCapColor(d => {
+          // Semi-transparent country caps: the real earth-day satellite
+          // texture (oceans, terrain, clouds) shows through underneath,
+          // tinted by each country's emissions colour, rather than a flat
+          // colour hiding the globe entirely. Countries with no emissions
+          // data get almost no tint at all, so the globe looks like Earth
+          // first and a data layer second.
           const iso = ISO_N2A[String(d.id).padStart(3, "0")];
-          return EMISSIONS[iso] ? colorScale(EMISSIONS[iso]) : (isDark ? "#3a352c" : "#e4e2dc");
+          if (EMISSIONS[iso]) {
+            const c = d3.color(colorScale(EMISSIONS[iso]));
+            c.opacity = 0.55;
+            return c.toString();
+          }
+          return isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)";
         })
         .polygonSideColor(() => isDark ? "rgba(60,55,45,0.4)" : "rgba(180,175,160,0.3)")
         .polygonStrokeColor(() => isDark ? "#12100c" : "#ffffff")
